@@ -14,6 +14,7 @@
                         brand: {
                             50: '#f0f7ff',
                             100: '#e0effe',
+                            200: '#bae0fd',
                             500: '#0284c7',
                             600: '#0369a1',
                             700: '#075985',
@@ -28,11 +29,14 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,300&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             user-select: none;
             -webkit-user-select: none;
+        }
+        .passage-font {
+            font-family: 'Merriweather', serif;
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
@@ -48,13 +52,32 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #resultModal, #resultModal * {
+                visibility: visible;
+            }
+            #resultModal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                display: block !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
 
-    <!-- LOGIN & WELCOME PORTAL (ACTIVE BY DEFAULT) -->
+    <!-- LOGIN & WELCOME PORTAL -->
     <div id="loginPortal" class="fixed inset-0 z-50 bg-gradient-to-br from-brand-900 via-slate-900 to-indigo-950 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200/40 overflow-hidden my-auto animate-scale-up">
+        <div class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200/50 overflow-hidden my-auto">
             <!-- PORTAL HEADER -->
             <div class="bg-gradient-to-r from-brand-900 to-brand-800 p-6 md:p-8 text-white relative">
                 <div class="flex items-center space-x-3.5 mb-2">
@@ -66,7 +89,7 @@
                         <h2 class="text-lg md:text-xl font-extrabold tracking-tight">SIMULASI KOMPETISI BAHASA INGGRIS</h2>
                     </div>
                 </div>
-                <p class="text-xs md:text-sm text-slate-300">Tingkat SMP/MTs • POSI Smart Champion • Naskah Lengkap 75 Soal</p>
+                <p class="text-xs md:text-sm text-slate-300">Tingkat SMP/MTs • POSI Smart Champion • Pembahasan Pedagogis 75 Soal</p>
                 <div class="absolute top-4 right-4 text-white/10 text-7xl font-black select-none pointer-events-none">
                     CBT
                 </div>
@@ -75,7 +98,7 @@
             <!-- LOGIN FORM -->
             <form id="loginForm" onsubmit="handleStartExam(event)" class="p-6 md:p-8 space-y-4">
                 <!-- ERROR NOTIFICATION -->
-                <div id="loginAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 text-xs md:text-sm flex items-start gap-2.5 animate-bounce-short">
+                <div id="loginAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 text-xs md:text-sm flex items-start gap-2.5">
                     <i class="ph-bold ph-warning-circle text-lg flex-shrink-0 mt-0.5 text-rose-600"></i>
                     <span id="loginAlertText">Token ujian tidak valid atau salah! Silakan hubungi proktor / pengawas ujian Anda.</span>
                 </div>
@@ -114,18 +137,18 @@
                             <select id="examDurationSelect" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition font-medium">
                                 <option value="90">90 Menit (Standar Kompetisi)</option>
                                 <option value="60">60 Menit (Simulasi Cepat)</option>
-                                <option value="120">120 Menit (Latihan Santai)</option>
+                                <option value="120">120 Menit (Latihan & Analisis)</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <!-- INTEGRITY STATEMENT -->
-                <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl">
+                <div class="p-3.5 bg-amber-50/80 border border-amber-200 rounded-xl">
                     <label class="flex items-start gap-2.5 cursor-pointer">
                         <input type="checkbox" id="integrityAgreement" required class="mt-0.5 w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-amber-400">
                         <span class="text-xs text-amber-900 leading-relaxed font-medium">
-                            Saya berjanji mengerjakan simulasi soal ini secara mandiri, jujur, serta tertib sesuai prosedur ujian CBT resmi.
+                            Saya berjanji mengerjakan simulasi soal ini secara mandiri, jujur, serta tertib sesuai standar kompetisi sains dan bahasa resmi.
                         </span>
                     </label>
                 </div>
@@ -138,7 +161,7 @@
                     </button>
                     <p class="text-[11px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1">
                         <i class="ph-bold ph-lock-key text-slate-400"></i>
-                        <span>Token didapatkan dari pengawas ruang / panitia ujian</span>
+                        <span>Token didapatkan dari pengawas ruang / proktor ujian</span>
                     </p>
                 </div>
             </form>
@@ -154,7 +177,7 @@
             <div>
                 <h1 class="text-sm md:text-base font-bold leading-tight tracking-wide flex items-center gap-2">
                     SIMULASI KOMPETISI BAHASA INGGRIS SMP
-                    <span class="hidden sm:inline-block text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-2 py-0.5 rounded font-mono">75 SOAL</span>
+                    <span class="hidden sm:inline-block text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-2 py-0.5 rounded font-mono">75 SOAL LENGKAP</span>
                 </h1>
                 <div class="flex items-center gap-2 text-xs text-slate-300">
                     <span id="navParticipantName" class="font-bold text-cyan-300 truncate max-w-[120px] sm:max-w-[180px]">Nama Peserta</span>
@@ -211,7 +234,10 @@
                         MUDAH
                     </span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3">
+                    <button onclick="clearCurrentAnswer()" class="text-xs text-slate-500 hover:text-rose-600 underline font-medium" title="Hapus pilihan">
+                        Reset Jawaban
+                    </button>
                     <label class="inline-flex items-center cursor-pointer select-none text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-lg transition">
                         <input type="checkbox" id="flagCheckbox" onchange="toggleFlag()" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-amber-400 mr-2">
                         <span>Ragu-ragu</span>
@@ -222,20 +248,20 @@
             <!-- SCROLLABLE QUESTION CONTENT -->
             <div class="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar space-y-6" id="questionContentArea">
                 
-                <!-- PASSAGE CONTAINER (if question belongs to reading passage) -->
-                <div id="passageContainer" class="hidden border-l-4 border-brand-600 bg-brand-50/60 p-5 rounded-r-xl border border-slate-200">
+                <!-- PASSAGE CONTAINER -->
+                <div id="passageContainer" class="hidden border-l-4 border-brand-600 bg-brand-50/70 p-5 rounded-r-xl border border-slate-200">
                     <div class="flex items-center gap-2 text-brand-900 font-bold text-sm uppercase mb-2">
                         <i class="ph-bold ph-book-open-text text-base"></i>
                         <span id="passageTitle">Reading Passage</span>
                     </div>
-                    <div id="passageText" class="text-slate-700 text-sm md:text-base leading-relaxed whitespace-pre-line italic font-serif"></div>
+                    <div id="passageText" class="text-slate-700 text-sm md:text-base leading-relaxed whitespace-pre-line italic passage-font"></div>
                 </div>
 
-                <!-- IMAGE CONTAINER (if question has picture, e.g. Q32) -->
+                <!-- IMAGE / ILLUSTRATION CONTAINER (e.g. Q32) -->
                 <div id="imageContainer" class="hidden flex justify-center py-2">
-                    <div class="border-2 border-slate-200 p-2 rounded-xl bg-slate-50 max-w-sm shadow-sm text-center">
-                        <img id="questionImage" src="" alt="Question Illustration" class="rounded-lg max-h-56 mx-auto object-contain">
-                        <p class="text-xs text-slate-400 mt-1 italic">Perhatikan gambar untuk menjawab soal</p>
+                    <div class="border-2 border-slate-200 p-3 rounded-2xl bg-slate-50 max-w-md shadow-sm text-center">
+                        <div id="questionSvgWrapper" class="mx-auto flex justify-center items-center"></div>
+                        <p class="text-xs text-slate-500 mt-2 font-medium">Perhatikan ilustrasi di atas untuk menjawab soal nomor 32</p>
                     </div>
                 </div>
 
@@ -245,9 +271,7 @@
                 </div>
 
                 <!-- OPTIONS LIST -->
-                <div class="space-y-3 pt-2" id="optionsContainer">
-                    <!-- Populated dynamically via JS -->
-                </div>
+                <div class="space-y-3 pt-2" id="optionsContainer"></div>
             </div>
 
             <!-- BOTTOM CONTROLLER BAR -->
@@ -282,7 +306,7 @@
             <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
                 <div>
                     <h3 class="font-bold text-slate-800 text-sm">Navigasi Soal</h3>
-                    <p class="text-xs text-slate-500">Klik nomor untuk berpindah soal</p>
+                    <p class="text-xs text-slate-500">Klik nomor untuk menuju soal</p>
                 </div>
                 <button onclick="toggleMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-200">
                     <i class="ph-bold ph-x text-lg"></i>
@@ -307,9 +331,7 @@
 
             <!-- BUTTONS GRID -->
             <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                <div id="questionGridContainer" class="grid grid-cols-5 gap-2">
-                    <!-- Populated 1 to 75 dynamically -->
-                </div>
+                <div id="questionGridContainer" class="grid grid-cols-5 gap-2"></div>
             </div>
 
             <!-- QUICK SUMMARY STATS -->
@@ -328,82 +350,87 @@
         </aside>
     </main>
 
-    <!-- RESULT & REVIEW MODAL/PAGE -->
-    <div id="resultModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scale-up">
+    <!-- RESULT & PEDAGOGICAL REVIEW MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 bg-slate-900/85 backdrop-blur-sm hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-5xl w-full max-h-[94vh] flex flex-col overflow-hidden">
             
             <!-- MODAL HEADER -->
             <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-indigo-900 text-white p-6 md:p-8 flex items-center justify-between flex-shrink-0">
                 <div class="space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs uppercase tracking-widest text-cyan-300 font-bold">Hasil Simulasi Resmi</span>
+                        <span class="text-xs uppercase tracking-widest text-cyan-300 font-bold bg-cyan-950/80 px-2.5 py-0.5 rounded border border-cyan-400/30">HASIL SIMULASI KOMPETISI</span>
                         <span id="resultBadgeParticipant" class="text-xs bg-white/20 text-white px-2 py-0.5 rounded font-medium">Peserta</span>
                     </div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Skor & Pembahasan Ujian</h2>
-                    <p class="text-xs md:text-sm text-slate-300" id="resultParticipantDetails">Nama: - | Sekolah: -</p>
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Evaluasi Nilai & Pembahasan Lengkap</h2>
+                    <p class="text-xs md:text-sm text-slate-300" id="resultParticipantDetails">Nama: - | Asal: -</p>
                 </div>
                 <div class="text-right">
                     <div class="text-3xl md:text-5xl font-black text-cyan-300 tracking-tight" id="scoreDisplay">0</div>
-                    <span class="text-xs text-slate-300">Skala 100</span>
+                    <span class="text-xs text-slate-300 font-medium">Skala 100 (Skor Tertimbang)</span>
                 </div>
             </div>
 
             <!-- STATS CARDS -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-6 bg-slate-50 border-b border-slate-200 flex-shrink-0">
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Benar</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-5 bg-slate-50 border-b border-slate-200 flex-shrink-0">
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Jawaban Benar</div>
                     <div id="statCorrect" class="text-2xl font-bold text-emerald-600">0</div>
-                    <div class="text-[10px] text-emerald-500 font-medium">+4 Poin/Soal</div>
+                    <div class="text-[10px] text-emerald-600 font-medium">Tepat & Akurat</div>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Salah</div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Jawaban Salah</div>
                     <div id="statWrong" class="text-2xl font-bold text-rose-600">0</div>
-                    <div class="text-[10px] text-rose-500 font-medium">Jawaban Kurang Tepat</div>
+                    <div class="text-[10px] text-rose-500 font-medium">Perlu Evaluasi</div>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Kosong</div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Tidak Dijawab</div>
                     <div id="statEmpty" class="text-2xl font-bold text-slate-500">0</div>
-                    <div class="text-[10px] text-slate-400 font-medium">Tidak Dijawab</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Kosong</div>
                 </div>
-                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
-                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Akurasi</div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Akurasi Jawaban</div>
                     <div id="statAccuracy" class="text-2xl font-bold text-brand-600">0%</div>
-                    <div class="text-[10px] text-brand-500 font-medium">Tingkat Ketepatan</div>
+                    <div class="text-[10px] text-brand-500 font-medium">Rasio Ketepatan</div>
                 </div>
             </div>
 
             <!-- REVIEW LIST & FILTER -->
-            <div class="p-4 md:p-6 bg-white flex-1 overflow-y-auto custom-scrollbar space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-                    <h3 class="font-bold text-slate-800 text-base md:text-lg flex items-center gap-2">
-                        <i class="ph-bold ph-list-magnifying-glass text-brand-600"></i>
-                        Review 75 Soal & Pembahasan
-                    </h3>
-                    <div class="flex gap-1.5 text-xs">
-                        <button onclick="filterReview('all')" class="review-filter-btn active-filter px-3 py-1 rounded-lg bg-slate-200 font-medium" id="filterAll">Semua</button>
-                        <button onclick="filterReview('wrong')" class="review-filter-btn px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-rose-600" id="filterWrong">Salah</button>
-                        <button onclick="filterReview('correct')" class="review-filter-btn px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-emerald-600" id="filterCorrect">Benar</button>
+            <div class="p-4 md:p-6 bg-slate-100 flex-1 overflow-y-auto custom-scrollbar space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-300 gap-2">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base md:text-lg flex items-center gap-2">
+                            <i class="ph-bold ph-lightbulb text-brand-600 text-xl"></i>
+                            Pembahasan Edukatif & Analisis Jawaban (75 Soal)
+                        </h3>
+                        <p class="text-xs text-slate-500">Pelajari konsep gramatikal, telaah kalimat, dan eliminasi opsi yang salah.</p>
+                    </div>
+                    <div class="flex gap-1.5 text-xs no-print">
+                        <button onclick="filterReview('all')" class="review-filter-btn px-3 py-1.5 rounded-xl bg-brand-600 text-white font-bold" id="filterAll">Semua (75)</button>
+                        <button onclick="filterReview('wrong')" class="review-filter-btn px-3 py-1.5 rounded-xl bg-white hover:bg-slate-200 font-semibold text-rose-600 border border-slate-300" id="filterWrong">Salah</button>
+                        <button onclick="filterReview('correct')" class="review-filter-btn px-3 py-1.5 rounded-xl bg-white hover:bg-slate-200 font-semibold text-emerald-600 border border-slate-300" id="filterCorrect">Benar</button>
                     </div>
                 </div>
 
-                <div id="reviewItemsContainer" class="space-y-4">
-                    <!-- Populated dynamically -->
-                </div>
+                <div id="reviewItemsContainer" class="space-y-5"></div>
             </div>
 
             <!-- MODAL FOOTER -->
-            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+            <div class="p-4 bg-white border-t border-slate-200 flex items-center justify-between flex-shrink-0 no-print">
                 <div class="flex gap-2">
-                    <button onclick="restartExam()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition flex items-center gap-2 shadow-sm">
+                    <button onclick="restartExam()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition flex items-center gap-2 shadow-sm">
                         <i class="ph-bold ph-arrows-counter-clockwise"></i>
                         <span>Ulangi Ujian</span>
                     </button>
-                    <button onclick="logoutToPortal()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition flex items-center gap-1.5">
+                    <button onclick="window.print()" class="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm transition flex items-center gap-1.5">
+                        <i class="ph-bold ph-printer"></i>
+                        <span>Cetak Hasil</span>
+                    </button>
+                    <button onclick="logoutToPortal()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition flex items-center gap-1.5">
                         <i class="ph-bold ph-sign-out"></i>
                         <span>Ganti Peserta</span>
                     </button>
                 </div>
-                <button onclick="closeResultModal()" class="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-sm transition">
+                <button onclick="closeResultModal()" class="px-6 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-sm transition">
                     Tutup
                 </button>
             </div>
@@ -411,8 +438,8 @@
     </div>
 
     <!-- CONFIRMATION PROMPT MODAL -->
-    <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up">
+    <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
             <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mx-auto">
                 <i class="ph-bold ph-warning-circle"></i>
             </div>
@@ -436,7 +463,7 @@
             </div>
             <div class="flex gap-3 pt-2">
                 <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
-                    Lanjutkan Ujian
+                    Lanjutkan Pengerjaan
                 </button>
                 <button onclick="finalizeExam()" class="flex-1 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition shadow-md">
                     Ya, Kumpulkan
@@ -445,7 +472,7 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC & COMPLETE 75 QUESTIONS DATA -->
+    <!-- JAVASCRIPT LOGIC & COMPLETE 75 QUESTIONS PEDAGOGICAL DATA -->
     <script>
         // Reading Passages Dictionary
         const passages = {
@@ -467,7 +494,7 @@
             }
         };
 
-        // Complete 75 Questions Dataset from POSI Bahasa Inggris SMP
+        // Complete 75 Questions Dataset from POSI Bahasa Inggris SMP with Deep Pedagogical Explanations
         const questionsData = [
             {
                 id: 1,
@@ -476,7 +503,9 @@
                 question: "The traveling... to domestic cities rises greatly.",
                 options: ["A. costly", "B. costed", "C. costs", "D. cost"],
                 key: "D",
-                explanation: "Subjek utama kalimat di atas haruslah tunggal karena menggunakan kata kerja 'rises' (sesuai aturan simple present tense), sehingga D (cost) adalah jawaban yang tepat."
+                concept: "Subject-Verb Agreement & Noun Function (Single Compound Subject)",
+                analysis: "Kata kerja pada kalimat ini adalah 'rises' (akhiran -s/-es menandakan Simple Present Tense dengan subjek tunggal / singular subject: He/She/It). Bagian rumpang berfungsi sebagai inti kata benda (head noun) dari frasa subjek 'The traveling cost'. Karena kata kerjanya adalah 'rises' (tunggal), maka kata benda yang dibutuhkan harus dalam bentuk tunggal (singular noun) yaitu 'cost'. Frasa 'The traveling cost' berarti biaya perjalanan.",
+                elimination: "• A (costly): Merupakan kata sifat (adjective) yang berarti 'mahal', bukan kata benda penunjuk subjek.\n• B (costed): Bentuk lampau yang tidak lazim sebagai kata benda dan salah secara tata bahasa di sini.\n• C (costs): Merupakan bentuk jamak (plural noun). Jika subjeknya jamak ('costs'), kata kerjanya seharusnya 'rise', bukan 'rises'."
             },
             {
                 id: 2,
@@ -485,7 +514,9 @@
                 question: "We must not ... stray animals.",
                 options: ["A. torturing", "B. tortures", "C. torture", "D. tortured"],
                 key: "C",
-                explanation: "Adanya modal (must not) mengharuskan penggunaan kata kerja bentuk pertama (V1) yaitu 'torture', sehingga C adalah jawaban yang tepat."
+                concept: "Modal Auxiliary Rule (Modal + Bare Infinitive / Verb 1)",
+                analysis: "Dalam tata bahasa Inggris, kata kerja bantu ragam (modal auxiliary) seperti 'must', 'can', 'should', 'may' beserta bentuk negatifnya (must not) wajib diikuti oleh kata kerja dasar murni (bare infinitive / V1 murni) tanpa imbuhan -ing, -s/-es, atau -ed.",
+                elimination: "• A (torturing): Berupa gerund / present participle (-ing) yang menyalahi kaidah modal.\n• B (tortures): Berupa kata kerja dengan penambahan akhiran -s, hanya dipakai untuk Simple Present subjek tunggal orang ketiga.\n• D (tortured): Berupa bentuk V2/V3 (past form), tidak dapat menempel langsung setelah modal auxiliary 'must not'."
             },
             {
                 id: 3,
@@ -494,7 +525,9 @@
                 question: "The glass is quite ..., so please be careful.",
                 options: ["A. solid", "B. fragile", "C. firm", "D. hard"],
                 key: "B",
-                explanation: "Adanya instruksi 'be careful' (hati-hati) memberi pemahaman bahwa kata sifat yang sesuai adalah 'fragile' (rapuh/mudah pecah), sehingga B tepat."
+                concept: "Adjective Context & Collocation in Cause-Effect",
+                analysis: "Klausa kedua memuat peringatan 'so please be careful' (harap berhati-hati). Kaca (glass) yang menuntut kehati-hatian dalam penanganan memiliki sifat rentan pecah atau rapuh. Kata sifat dalam bahasa Inggris untuk benda yang mudah pecah adalah 'fragile'.",
+                elimination: "• A (solid): Berarti padat/kokoh, kontradiktif dengan instruksi kehati-hatian karena kerapuhan.\n• C (firm): Berarti kuat, kukuh, atau teguh.\n• D (hard): Berarti keras. Meskipun kaca keras, alasan utama perlunya berhati-hati adalah sifatnya yang mudah pecah (fragile)."
             },
             {
                 id: 4,
@@ -503,7 +536,9 @@
                 question: "They dance ... like a swan in the lake.",
                 options: ["A. elegantly", "B. elegance", "C. eleganting", "D. eleganted"],
                 key: "A",
-                explanation: "Kalimat di atas membutuhkan keterangan cara (adverb of manner) dengan akhiran -ly ('elegantly') untuk menerangkan kata kerja dance."
+                concept: "Adverb of Manner (Menerangkan Cara Kata Kerja)",
+                analysis: "Kalimat membutuhkan kata keterangan cara (Adverb of Manner) untuk menerangkan bagaimana subjek melakukan kegiatan menari ('dance'). Adverb of manner dibentuk dari kata sifat (adjective) 'elegant' ditambah akhiran '-ly' menjadi 'elegantly' (dengan anggun).",
+                elimination: "• B (elegance): Merupakan kata benda (noun) yang berarti 'keanggunan'.\n• C (eleganting): Bukan bentukan kata yang baku dalam leksikon bahasa Inggris.\n• D (eleganted): Bukan bentukan kata baku (kata sifat tidak diberi akhiran lampau -ed seperti kata kerja)."
             },
             {
                 id: 5,
@@ -512,7 +547,9 @@
                 question: "She becomes an ... after graduating.",
                 options: ["A. entrepreneur", "B. hacker", "C. sociopreneur", "D. personal trainer"],
                 key: "A",
-                explanation: "Artikel 'an' mengharuskan penggunaan kata benda yang diawali bunyi vokal. 'entrepreneur' diawali dengan bunyi vokal e."
+                concept: "Indefinite Article ('An' sebelum bunyi vokal)",
+                analysis: "Artikel tak tentu (indefinite article) 'an' hanya digunakan sebelum kata benda tunggal yang berawalan bunyi vokal (vowel sounds: /æ/, /e/, /ɪ/, /ɒ/, /ʌ/, dll). Kata 'entrepreneur' diawali oleh lafal vokal /ˌɒn.trə.prəˈnɜːr/ sehingga wajib menggunakan artikel 'an'.",
+                elimination: "• B (hacker): Diawali bunyi konsonan /h/ (/ˈhæk.ər/), sehingga memerlukan artikel 'a hacker'.\n• C (sociopreneur): Diawali bunyi konsonan /s/ (/ˌsoʊ.si.oʊ.prəˈnɝː/), memerlukan artikel 'a sociopreneur'.\n• D (personal trainer): Diawali bunyi konsonan /p/ (/ˈpɜː.sən.əl/), memerlukan artikel 'a personal trainer'."
             },
             {
                 id: 6,
@@ -521,7 +558,9 @@
                 question: "We need to verify ... account.",
                 options: ["A. we", "B. us", "C. our", "D. ourselves"],
                 key: "C",
-                explanation: "Kalimat membutuhkan kata ganti kepemilikan (possessive adjective) yang sesuai dengan subjek we, yaitu 'our'."
+                concept: "Possessive Adjectives / Determiners",
+                analysis: "Di depan kata benda 'account' diperlukan kata ganti penentu kepemilikan (possessive adjective) yang bersesuaian dengan subjek 'We'. Bentuk possessive adjective untuk 'We' adalah 'our' (akun kita/kami).",
+                elimination: "• A (we): Merupakan Subject Pronoun, hanya dapat berdiri di posisi subjek klausa.\n• B (us): Merupakan Object Pronoun, hanya menempati posisi objek langsung/tidak langsung setelah kata kerja/preposisi.\n• D (ourselves): Merupakan Reflexive / Intensive Pronoun, tidak dapat memodifikasi kata benda langsung sebagai penunjuk kepemilikan."
             },
             {
                 id: 7,
@@ -530,7 +569,9 @@
                 question: "The first meeting will be ... the top level of this building.",
                 options: ["A. in", "B. at", "C. to", "D. on"],
                 key: "D",
-                explanation: "Preposisi yang tepat untuk lokasi yang menunjukkan lantai atau level bangunan bertingkat adalah 'on'."
+                concept: "Preposition of Place for Floors/Levels of Building",
+                analysis: "Dalam kaidah preposisi tempat bahasa Inggris, ketika menyebutkan lantai (floor) atau tingkat/level dari suatu gedung bertingkat, preposisi standar yang digunakan adalah 'on' (contoh: on the first floor, on the top level, on the third storey).",
+                elimination: "• A (in): Digunakan untuk ruangan tertutup atau volume wadah (in the room, in the hall).\n• B (at): Digunakan untuk penunjuk titik lokasi umum atau alamat (at the building, at the office).\n• C (to): Merupakan preposisi pergerakan arah (movement/direction), bukan penunjuk posisi diam."
             },
             {
                 id: 8,
@@ -540,7 +581,9 @@
                 question: "What is the main idea of the passage above?",
                 options: ["A. Jenna's aspiration to be a superstar", "B. Jenna's professional dance career", "C. Jenna's challenge to be famous", "D. Jenna's hesitation in her goals"],
                 key: "A",
-                explanation: "Jawaban ada di frasa 'dreams of becoming' di baris pertama paragraf, di mana frasa ini bersinonim makna dengan kata 'aspiration'."
+                concept: "Reading Comprehension: Identifying Central Theme & Synonyms",
+                analysis: "Gagasan utama (main idea) mencakup keseluruhan isi paragraf. Kalimat pertama menyatakan 'Jenna was a typical middle school girl with dreams of becoming a K-pop idol.' Kata 'dreams of becoming' merupakan sinonim langsung dari 'aspiration' (cita-cita / aspirasi) untuk menjadi superstar (K-pop idol). Paragraf ini merangkum perjuangan dan latihan Jenna demi mengejar impiannya tersebut.",
+                elimination: "• B (Jenna's professional dance career): Jenna adalah siswi SMP biasa yang baru mengambil les tari lokal, ia belum berkarir profesional.\n• C (Jenna's challenge to be famous): Teks lebih fokus pada semangat Jenna menyiapkan audisi, bukan deretan rintangan ketenarannya.\n• D (Jenna's hesitation in her goals): Jenna justru sangat bertekad ('determined to put in the necessary work'), bukan ragu-ragu (hesitation)."
             },
             {
                 id: 9,
@@ -550,7 +593,9 @@
                 question: "What did Jenna do to realize her dream?",
                 options: ["A. She enrolled in a talent casting", "B. She signed an exclusive contract", "C. She rehearsed on professional stage", "D. She imitated her idol's image"],
                 key: "A",
-                explanation: "Pada baris ketiga disebutkan 'she decided to join a global audition for a girl group' yang bersinonim makna dengan kata 'enrolled in a talent casting'."
+                concept: "Reading Comprehension: Paraphrasing & Stated Facts",
+                analysis: "Pada baris ketiga teks tertulis: 'she decided to join a global audition for a girl group'. Frasa 'join a global audition' diparafrasekan secara akurat menjadi 'enrolled in a talent casting' (mendaftar pada pemilihan/audisi bakat).",
+                elimination: "• B (She signed an exclusive contract): Teks tidak pernah menyebutkan ia sudah menandatangani kontrak eksklusif; ia baru tahap mengirim video audisi.\n• C (She rehearsed on professional stage): Jenna berlatih di kamarnya ('in her room') dan kelas tari lokal, bukan panggung profesional.\n• D (She imitated her idol's image): Jenna terinspirasi (inspired), bukan sekadar meniru citra penampilan idolanya."
             },
             {
                 id: 10,
@@ -560,7 +605,9 @@
                 question: "What does the word 'it' in the last paragraph refer to?",
                 options: ["A. singing", "B. performance", "C. video", "D. class"],
                 key: "C",
-                explanation: "Pada kalimat 'She submitted a video of her singing and dancing for the audition, feeling both excited and nervous as she recorded it multiple times', kata 'it' mengacu pada 'video'."
+                concept: "Pronoun Antecedent Reference",
+                analysis: "Perhatikan kalimat utuhnya: 'She submitted a video of her singing and dancing for the audition, feeling both excited and nervous as she recorded it multiple times.' Kata kerja 'recorded' (merekam) merujuk langsung kepada kata benda tunggal yang menjadi objek rekaman sebelumnya, yaitu 'a video'.",
+                elimination: "• A (singing): 'Singing' adalah aktivitas vokal; yang direkam berulang kali dalam bentuk media digital adalah videonya.\n• B (performance): Kata 'performance' tidak muncul sebagai anteseden langsung di klausa tersebut.\n• D (class): Kelas tari adalah tempat belajar, bukan objek yang direkam berulang kali untuk diserahkan ke audisi."
             },
             {
                 id: 11,
@@ -569,7 +616,9 @@
                 question: "I want to join the event, ... I am afraid for my tight schedule.",
                 options: ["A. but", "B. and", "C. so", "D. for"],
                 key: "A",
-                explanation: "Hubungan kedua klausa menunjukkan pertentangan/kontras, sehingga kata hubung yang tepat adalah 'but'."
+                concept: "Coordinating Conjunctions: Contrast Relationship",
+                analysis: "Dua klausa yang dihubungkan menunjukkan makna pertentangan (kontras): keinginan untuk ikut acara ('want to join') bertolak belakang dengan kekhawatiran karena jadwal yang padat ('tight schedule'). Konjungsi koordinatif untuk menyatakan kontras adalah 'but' (tetapi).",
+                elimination: "• B (and): Digunakan untuk menambahkan informasi yang setara dan sejalan (penambahan).\n• C (so): Menunjukkan akibat / hasil logis (sebab-akibat).\n• D (for): Menunjukkan alasan logis (karena/sebab), kurang tepat disandingkan dengan kalimat bermakna kontras langsung di klausa depan."
             },
             {
                 id: 12,
@@ -578,7 +627,9 @@
                 question: "... will you stay? I know some good accommodations.",
                 options: ["A. When", "B. Where", "C. Why", "D. Who"],
                 key: "B",
-                explanation: "Kata 'accommodations' berkaitan dengan tempat penginapan, sehingga kata tanya yang sesuai adalah 'Where'."
+                concept: "Interrogative Pronouns / WH-Questions (Asking for Location)",
+                analysis: "Klausa kedua memberikan petunjuk yang sangat jelas: 'I know some good accommodations' (akomodasi/tempat menginap yang bagus). Karena konteksnya menanyakan tempat menginap (stay), kata tanya yang digunakan untuk menanyakan tempat adalah 'Where' (di mana).",
+                elimination: "• A (When): Menanyakan keterangan waktu (kapan).\n• C (Why): Menanyakan alasan atau sebab (mengapa).\n• D (Who): Menanyakan orang atau pelaku (siapa)."
             },
             {
                 id: 13,
@@ -587,7 +638,9 @@
                 question: "These books are usually ... by kindergarten students.",
                 options: ["A. reads", "B. reading", "C. read", "D. readed"],
                 key: "C",
-                explanation: "Struktur kalimat passive present adalah S + are + V3. Bentuk V3 dari read adalah tetap 'read' (dilafalkan /red/)."
+                concept: "Passive Voice Formulation (Subject + be + Past Participle / V3)",
+                analysis: "Struktur kalimat pasif (passive voice) dalam Simple Present adalah: Subject + is/am/are + Past Participle (V3). Bentuk dasar kata kerja 'read' (V1) memiliki bentuk lampau V2 'read' dan V3 'read' (tulisan sama, dilafalkan /red/). Jadi bentuk V3 yang benar adalah 'read'.",
+                elimination: "• A (reads): Bentuk kata kerja aktif orang ketiga tunggal.\n• B (reading): Bentuk present participle (-ing) yang biasa digunakan dalam bentuk continuous.\n• D (readed): Bukan bentuk kata baku dalam bahasa Inggris; 'read' merupakan kata kerja tidak beraturan (irregular verb), bukan regular verb yang ditambah -ed."
             },
             {
                 id: 14,
@@ -596,7 +649,9 @@
                 question: "My daughter wants a small, .... and portable bag.",
                 options: ["A. colourful", "B. colouring", "C. colour", "D. colours"],
                 key: "A",
-                explanation: "Urutan kesetaraan (parallel structure) menggunakan kata sifat ('small', 'portable'), sehingga kata sifat yang tepat adalah 'colourful'."
+                concept: "Parallel Structure with Coordinate Adjectives",
+                analysis: "Ketika beberapa kata dihubungkan dengan tanda koma dan kata hubung 'and' sebelum kata benda 'bag', kata-kata tersebut harus memiliki kelas kata yang setara (paralel). 'small' adalah kata sifat (adjective), 'portable' adalah kata sifat (adjective), maka kata yang mengisi rumpang wajib berupa kata sifat (adjective), yaitu 'colourful' (penuh warna).",
+                elimination: "• B (colouring): Merupakan gerund / participle yang bermakna proses mewarnai.\n• C (colour): Merupakan kata benda (noun) atau kata kerja (verb).\n• D (colours): Merupakan kata benda jamak (plural noun)."
             },
             {
                 id: 15,
@@ -605,7 +660,9 @@
                 question: "My father is a fish ... . He sells tuna, salmon and cod.",
                 options: ["A. slaughter", "B. merchant", "C. farmer", "D. whisperer"],
                 key: "B",
-                explanation: "Kata kunci 'sells' (menjual) mengarah kepada profesi 'merchant' (penjual / pedagang ikan)."
+                concept: "Vocabulary: Compound Nouns for Occupations & Trade",
+                analysis: "Konteks kalimat diperjelas oleh 'He sells tuna, salmon and cod' (Dia menjual ikan tuna, salmon, dan kod). Orang yang memperjualbelikan komoditas disebut pedagang (merchant). Istilah baku dalam bahasa Inggris untuk pedagang ikan adalah 'fish merchant' (atau fishmonger).",
+                elimination: "• A (slaughter): Berarti pembantaian/penyembelihan, bukan nama profesi pedagang.\n• C (farmer): Berarti petani/peternak. Peternak ikan biasanya disebut fish farmer, namun di kalimat ini fokusnya adalah menjual berbagai jenis ikan laut tangkapan, bukan membudidayakannya.\n• D (whisperer): Kiasan orang yang mampu berkomunikasi dengan hewan, tidak masuk akal dalam konteks perdagangan."
             },
             {
                 id: 16,
@@ -614,7 +671,9 @@
                 question: "Students of class A usually... before they begin their academic work.",
                 options: ["A. study", "B. studying", "C. studies", "D. studied"],
                 key: "A",
-                explanation: "Kalimat menggunakan Simple Present Tense (ada kata 'usually') dengan subjek jamak 'Students', sehingga menggunakan kata kerja dasar V1 'study'."
+                concept: "Subject-Verb Agreement in Simple Present (Plural Subject)",
+                analysis: "Terdapat adverb of frequency 'usually' yang mengindikasikan Simple Present Tense untuk kebiasaan rutin. Subjek kalimat adalah 'Students of class A'. Inti subjek (head noun) adalah 'Students' yang berbentuk jamak (plural). Aturan Simple Present untuk subjek jamak (They/Students) menggunakan kata kerja bentuk dasar V1 tanpa tambahan -s/-es, yaitu 'study'.",
+                elimination: "• B (studying): Bentuk participle (-ing), membutuhkan to be bantu untuk membentuk kalimat aktif dan tidak lazim langsung menempel pada subjek tanpa to be.\n• C (studies): Hanya digunakan jika subjeknya tunggal orang ketiga (He/She/A student).\n• D (studied): Bentuk Simple Past (lampau), bertentangan dengan penanda kebiasaan saat ini 'usually'."
             },
             {
                 id: 17,
@@ -623,7 +682,9 @@
                 question: "Last week, we ... watch the movie until the end.",
                 options: ["A. doesn't", "B. don't", "C. didn't", "D. hadn't"],
                 key: "C",
-                explanation: "Keterangan waktu lampau 'Last week' memerlukan bentuk negatif simple past yaitu S + didn't + V1."
+                concept: "Negative Form in Simple Past Tense (Subject + didn't + V1)",
+                analysis: "Keterangan waktu pada kalimat adalah 'Last week' (minggu lalu) yang merupakan penanda definitif waktu lampau (Simple Past Tense). Pola kalimat menyangkal (negatif) pada Simple Past adalah: Subject + did not (didn't) + kata kerja bentuk pertama (V1 'watch').",
+                elimination: "• A (doesn't): Digunakan untuk Simple Present subjek tunggal orang ketiga (He/She/It).\n• B (don't): Digunakan untuk Simple Present subjek jamak/I/You/We/They.\n• D (hadn't): Merupakan auxiliary untuk Past Perfect yang harus diikuti oleh Past Participle (V3 'watched'), bukan kata kerja dasar (V1 'watch')."
             },
             {
                 id: 18,
@@ -632,7 +693,9 @@
                 question: "According to schedule, they ... us after lunch.",
                 options: ["A. were going to visit", "B. are going to visit", "C. were visiting", "D. will visit"],
                 key: "B",
-                explanation: "Frasa 'According to schedule' menunjukkan rencana yang sudah terjadwal (planned future), sehingga bentuk 'are going to visit' adalah pilihan paling tepat."
+                concept: "Planned Future / Pre-arranged Timetable (be going to)",
+                analysis: "Frasa pembuka 'According to schedule' (berdasarkan jadwal) menunjukkan rencana masa depan yang sudah diagendakan secara teratur dan memiliki kepastian waktu. Dalam bahasa Inggris, 'be going to' atau Present Continuous lebih diutamakan daripada 'will' untuk rencana yang telah dijadwalkan secara resmi. Dengan subjek 'they', to be yang tepat adalah 'are', sehingga menghasilkan 'are going to visit'.",
+                elimination: "• A (were going to visit): Bentuk masa lampau (Past Future), padahal konteks merujuk rencana hari ini setelah makan siang.\n• C (were visiting): Bentuk Past Continuous (lampau), tidak logis untuk peristiwa terjadwal.\n• D (will visit): Lebih tepat digunakan untuk keputusan spontan saat berbicara (spontaneous decisions) daripada agenda terjadwal yang sudah resmi."
             },
             {
                 id: 19,
@@ -641,7 +704,9 @@
                 question: "She... in this office since 2010.",
                 options: ["A. works", "B. is working", "C. worked", "D. has worked"],
                 key: "D",
-                explanation: "Keterangan waktu 'since 2010' mengindikasikan tense Present Perfect: S + has/have + V3, maka jawabannya 'has worked'."
+                concept: "Present Perfect Tense with Preposition 'Since' (Continuity to Present)",
+                analysis: "Kata depan penunjuk waktu 'since 2010' (sejak 2010) mengindikasikan suatu perbuatan yang dimulai di masa lampau dan masih berlangsung atau memiliki relevansi hingga saat ini. Tense yang wajib digunakan adalah Present Perfect: Subject + have/has + V3. Dengan subjek tunggal 'She', kita menggunakan 'has worked'.",
+                elimination: "• A (works): Simple Present hanya menyatakan rutinitas umum tanpa menekankan durasi rentang waktu 'since'.\n• B (is working): Present Continuous menyatakan kegiatan sesaat yang sedang berlangsung sekarang, tidak dapat dipasangkan dengan titik awal rentang 'since 2010'.\n• C (worked): Simple Past menandakan tindakan yang sudah selesai tuntas di masa lampau dan sekarang tidak lagi bekerja di sana."
             },
             {
                 id: 20,
@@ -650,7 +715,9 @@
                 question: "This is too ... that I think I will get instant diabetic.",
                 options: ["A. bitter", "B. sweet", "C. salty", "D. sour"],
                 key: "B",
-                explanation: "Penyakit 'diabetic' berkaitan erat dengan asupan gula berlebih sehingga rasa yang dimaksud adalah 'sweet' (manis)."
+                concept: "Vocabulary: Taste Descriptors and Health Context",
+                analysis: "Kata kunci 'diabetic' (diabetes/kencing manis) berhubungan langsung dengan konsumsi gula berlebih yang memiliki cita rasa manis ('sweet'). Ungkapan kiasan hiperbola 'get instant diabetic' merujuk pada rasa makanan atau minuman yang terlampau manis.",
+                elimination: "• A (bitter): Rasa pahit (seperti kopi tanpa gula atau obat).\n• C (salty): Rasa asin/gurih (terkait hipertensi, bukan diabetes).\n• D (sour): Rasa asam (seperti jeruk nipis atau cuka)."
             },
             {
                 id: 21,
@@ -659,16 +726,20 @@
                 question: "I just love these chips because they are ...",
                 options: ["A. runny", "B. moist", "C. crispy", "D. tender"],
                 key: "C",
-                explanation: "Camilan keripik (chips) memiliki tekstur yang khas yaitu renyah dan garing ('crispy')."
+                concept: "Sensory Words: Food Textures",
+                analysis: "'Chips' (keripik kentang / camilan garing) dikenal dan disukai karena teksturnya yang renyah dan garing saat digigit. Kata sifat bahasa Inggris yang melambangkan tekstur renyah dan rapuh pada keripik adalah 'crispy'.",
+                elimination: "• A (runny): Berarti cair atau encer (contoh: kuning telur setengah matang atau hidung meler).\n• B (moist): Berarti lembap atau agak basah lembut (tekstur yang bagus untuk kue bolu/cake, bukan keripik).\n• D (tender): Berarti empuk dan lembut (tekstur untuk daging steak, bukan keripik)."
             },
             {
                 id: 22,
-                topic: "VOLUME & QUANTIFIER",
+                topic: "QUANTIFIER",
                 level: "SEDANG",
                 question: "Please put ... salt on the food. I've got hypertension.",
                 options: ["A. a lot of", "B. a few", "C. some", "D. a little"],
                 key: "D",
-                explanation: "'Salt' merupakan uncountable noun, dan penderita hipertensi harus membatasi asupan garam sehingga takaran yang sangat sedikit adalah 'a little'."
+                concept: "Quantifiers with Uncountable Nouns & Medical Context",
+                analysis: "Dua hal yang perlu diperhatikan: 1) 'Salt' (garam) adalah kata benda yang tidak dapat dihitung (uncountable noun), sehingga hanya bisa disandingkan dengan kuantifier 'a little' atau 'much' (bukan 'a few'). 2) Konteks medis 'hypertension' (tekanan darah tinggi) mewajibkan pengurangan garam, sehingga porsi yang diminta adalah sangat sedikit ('a little').",
+                elimination: "• A (a lot of): Berarti banyak garam, yang justru sangat berbahaya bagi penderita hipertensi.\n• B (a few): Hanya digunakan untuk kata benda jamak yang dapat dihitung (countable nouns, misal: a few apples).\n• C (some): Bersifat netral/cukup, tidak menegaskan takaran minim yang dipersyaratkan penderita hipertensi."
             },
             {
                 id: 23,
@@ -677,7 +748,9 @@
                 question: "Your handwriting is..., isn't it? I might use magnifying glass to read it.",
                 options: ["A. humongous", "B. gigantic", "C. microscopic", "D. enormous"],
                 key: "C",
-                explanation: "Penggunaan 'magnifying glass' (kaca pembesar) menandakan tulisan tangan tersebut sangat kecil / renik ('microscopic')."
+                concept: "Degree of Size Descriptors & Context Clues",
+                analysis: "Klausa kedua memberikan petunjuk kontekstual penting: 'I might use magnifying glass to read it' (Saya mungkin harus memakai kaca pembesar untuk membacanya). Kaca pembesar digunakan untuk melihat objek yang luar biasa kecil. Kata sifat yang berarti sangat kecil seolah hanya terlihat di bawah mikroskop adalah 'microscopic'.",
+                elimination: "• A (humongous): Berarti sangat besar / raksasa.\n• B (gigantic): Berarti luar biasa besar / raksasa.\n• D (enormous): Berarti amat sangat luas / besar."
             },
             {
                 id: 24,
@@ -687,7 +760,9 @@
                 question: "What does the passage mainly talk about?",
                 options: ["A. Liam's weakness in his profession", "B. Liam's responsibility in his profession", "C. Liam's clumsiness in his profession", "D. Liam's legality in his profession"],
                 key: "B",
-                explanation: "Teks menjelaskan secara terperinci tugas dan tanggung jawab (responsibility) Liam sebagai prajurit penjaga perbatasan."
+                concept: "Reading Comprehension: Summarizing Central Subject & Duties",
+                analysis: "Paragraf tersebut merincikan tugas harian, kewajiban patroli, pengawasan perbatasan negara, hingga pembinaan hubungan dengan warga lokal yang dijalankan Liam sebagai prajurit. Semua uraian ini merangkum tanggung jawab dan kewajiban ('responsibility') dalam profesinya.",
+                elimination: "• A (Liam's weakness): Teks tidak pernah membahas kelemahan Liam; ia digambarkan berani dan disiplin.\n• C (Liam's clumsiness): 'Clumsiness' berarti kecerobohan/kekakuan fisik, sangat berlawanan dengan profil Liam.\n• D (Liam's legality): Legalitas status hukumnya bukan menjadi fokus pembahasan narasi."
             },
             {
                 id: 25,
@@ -697,7 +772,9 @@
                 question: "How does Liam figure out the condition of the area without being noticed?",
                 options: ["A. by using flying device", "B. by disguising himself", "C. by asking a trustworthy person", "D. by predicting carefully"],
                 key: "A",
-                explanation: "Pada teks tertulis tentara menggunakan teknologi canggih seperti drone ('flying device') untuk pengawasan perbatasan."
+                concept: "Reading Comprehension: Inference & Equipment Identification",
+                analysis: "Pada baris 4-5 teks disebutkan: 'soldiers monitor borders for unauthorized crossings using advanced technology like drones and cameras'. Sebuah drone adalah perangkat yang dapat terbang di udara (flying device) untuk melakukan pemantauan dari ketinggian tanpa disadari penyusup.",
+                elimination: "• B (by disguising himself): Teks tidak menyebutkan teknik menyamar (disguise).\n• C (by asking a trustworthy person): Pemantauan dilakukan dengan sensor teknologi, bukan menanyai informan.\n• D (by predicting carefully): Pemantauan menghasilkan fakta visual langsung dari kamera drone, bukan tebakan/prediksi."
             },
             {
                 id: 26,
@@ -707,7 +784,9 @@
                 question: "What kind of approach did Liam use to society?",
                 options: ["A. funding activity", "B. constant meeting", "C. community outreach programs", "D. promotional flyers"],
                 key: "C",
-                explanation: "Disebutkan di akhir kalimat: 'engage in community outreach programs to build relationships with locals'."
+                concept: "Reading Comprehension: Locating Specific Text Evidence",
+                analysis: "Perhatikan kalimat terakhir bacaan: 'Additionally, he and his team engage in community outreach programs to build relationships with locals and reduce fears about the military.' Kata 'locals' berpadanan langsung dengan 'society' (masyarakat sekitar).",
+                elimination: "• A (funding activity): Teks tidak menyinggung program bantuan dana/finansial.\n• B (constant meeting): Pertemuan konstan tidak disebutkan secara spesifik sebagai metode pendekatannya.\n• D (promotional flyers): Tidak ada pembagian selebaran brosur promosi yang disebutkan di teks."
             },
             {
                 id: 27,
@@ -716,7 +795,9 @@
                 question: "I have no idea that she loves to dance, ... and to pantomime in theatre.",
                 options: ["A. to sing", "B. singing", "C. sing", "D. sings"],
                 key: "A",
-                explanation: "Pola paralel pada kalimat di atas menggunakan bentuk to-infinitive (to dance, to sing, and to pantomime)."
+                concept: "Parallelism with Infinitives (Series of to + V1)",
+                analysis: "Aturan struktur paralel (parallel structure) mewajibkan semua elemen yang dirangkaikan dalam deret kata memiliki bentuk gramatikal yang identik. Pada kalimat ini: 'to dance' (infinitive) dihubungkan dengan 'and to pantomime' (infinitive). Maka bagian di tengahnya harus mempertahankan bentuk to-infinitive yang sama, yaitu 'to sing'.",
+                elimination: "• B (singing): Berupa gerund (-ing), merusak keseimbangan paralel dengan 'to dance' dan 'to pantomime'.\n• C (sing): Merupakan bare infinitive tanpa 'to', tidak setara secara eksplisit dengan deret 'to dance' dan 'to pantomime'.\n• D (sings): Berupa kata kerja bentuk ketiga tunggal, sangat keliru dalam susunan paralel objek kata kerja 'loves'."
             },
             {
                 id: 28,
@@ -725,7 +806,9 @@
                 question: "Classes in my school often... by janitors.",
                 options: ["A. is cleaning", "B. cleans", "C. are cleaned", "D. is clean"],
                 key: "C",
-                explanation: "Subjek 'Classes' adalah bentuk jamak, sehingga pasif present tenses adalah S + are + V3 ('are cleaned')."
+                concept: "Passive Voice in Simple Present with Plural Subject",
+                analysis: "Kalimat menggunakan 'often' (penanda Simple Present) dan diikuti oleh frase pelaku 'by janitors' yang mengindikasikan kalimat pasif (ruang kelas dibersihkan oleh petugas kebersihan). Subjek kalimat adalah 'Classes' (jamak). Rumus pasif Simple Present untuk subjek jamak adalah: are + Past Participle (V3), sehingga bentuk yang benar adalah 'are cleaned'.",
+                elimination: "• A (is cleaning): Kalimat aktif present continuous dengan to be tunggal ('is'), keliru secara subjek dan makna.\n• B (cleans): Kalimat aktif present dengan akhiran -s untuk subjek tunggal, tidak masuk akal jika kelas yang membersihkan.\n• D (is clean): Menggunakan 'clean' sebagai kata sifat dengan to be tunggal ('is'), tidak dapat dipadukan dengan agen 'by janitors'."
             },
             {
                 id: 29,
@@ -734,7 +817,9 @@
                 question: "... took my books? I need to find the culprit.",
                 options: ["A. Where", "B. Who", "C. When", "D. Why"],
                 key: "B",
-                explanation: "Kata 'culprit' merujuk kepada pelaku/orang, sehingga kata tanya subjek yang sesuai adalah 'Who'."
+                concept: "Subject WH-Question for Person",
+                analysis: "Kata 'culprit' bermakna pelaku kejahatan / orang yang bersalah. Karena kalimat kedua menyatakan keinginan untuk menemukan pelaku (orang yang mengambil buku), maka kata tanya yang menanyakan subjek pelaku orang adalah 'Who' (siapa).",
+                elimination: "• A (Where): Menanyakan tempat kejadian, bukan mencari pelaku orang.\n• C (When): Menanyakan waktu terjadinya peristiwa.\n• D (Why): Menanyakan motivasi atau alasan mengapa buku diambil."
             },
             {
                 id: 30,
@@ -743,7 +828,9 @@
                 question: "Those people performed well, ... they practiced day and night.",
                 options: ["A. so", "B. for", "C. but", "D. and"],
                 key: "B",
-                explanation: "Hubungan klausa adalah akibat-sebab. Konjungsi koordinatif 'for' memiliki arti 'karena / sebab'."
+                concept: "Coordinating Conjunction 'For' as 'Because' (Sebab-Akibat)",
+                analysis: "Hubungan antara kedua klausa independen ini adalah akibat di depan ('performed well') yang diikuti oleh alasan / penyebabnya di belakang ('they practiced day and night'). Konjungsi koordinatif (keluarga FANBOYS) yang bermakna 'karena / sebab' adalah 'for'.",
+                elimination: "• A (so): Menyatakan hasil/akibat (sehingga). Jika menggunakan 'so', kalimatnya terbalik: 'They practiced, so they performed well'.\n• C (but): Menyatakan kontras atau pertentangan, padahal kedua klausa ini selaras dan saling mendukung.\n• D (and): Menyatakan penambahan sederhana, tidak secara spesifik menegaskan hubungan sebab-musabab yang kuat."
             },
             {
                 id: 31,
@@ -752,18 +839,21 @@
                 question: "Please do not ... as we will announce the best speaker in this speech competition.",
                 options: ["A. come", "B. attend", "C. dismiss", "D. verify"],
                 key: "C",
-                explanation: "Konteks kalimat meminta audiens agar tidak bubar/meninggalkan tempat ('dismiss') sebelum pemenang diumumkan."
+                concept: "Contextual Vocabulary in Formal Assembly & Negative Imperatives",
+                analysis: "Klausa alasan menjelaskan 'as we will announce the best speaker in this speech competition' (karena kami akan mengumumkan pembicara terbaik). Ini berarti para hadirin yang sudah berada di ruangan diminta untuk tidak membubarkan diri atau meninggalkan tempat sebelum acara selesai. Kata formal untuk bubar/meninggalkan ruangan adalah 'dismiss' (atau leave).",
+                elimination: "• A (come): 'Please do not come' (tolong jangan datang) bertolak belakang dengan situasi acara kompetisi yang sedang berlangsung.\n• B (attend): 'Please do not attend' (tolong jangan hadir), sangat tidak sesuai dengan suasana di dalam gedung acara.\n• D (verify): 'Verify' berarti memverifikasi dokumen atau identitas, tidak ada kaitannya dengan audiens di ruangan."
             },
             {
                 id: 32,
                 topic: "PRESENT CONTINUOUS",
                 level: "SEDANG",
                 hasImage: true,
-                imageUrl: "https://placehold.co/480x280/1e293b/38bdf8?text=Computer+Technician+Repairing+PC+Case",
-                question: "What is the man doing?",
+                question: "What is the man doing in the illustration?",
                 options: ["A. He is repairing CPU", "B. He is charging cell-phone", "C. He is tuning the device", "D. He is installing his own roof"],
                 key: "A",
-                explanation: "Ilustrasi menunjukkan teknisi pria yang sedang memperbaiki unit komputer/CPU dengan obeng."
+                concept: "Visual Literacy & Action Description (Present Continuous)",
+                analysis: "Ilustrasi memperlihatkan seorang pria teknisi yang mengenakan kacamata dan sedang memegang obeng untuk membongkar serta memperbaiki perangkat keras casing komputer / CPU (Central Processing Unit). Tindakan ini secara tepat dideskripsikan dengan 'He is repairing CPU'.",
+                elimination: "• B (He is charging cell-phone): Gambar sama sekali tidak menunjukkan proses pengisian daya ponsel genggam.\n• C (He is tuning the device): 'Tuning' mengacu pada penalaan frekuensi radio atau instrumen musik.\n• D (He is installing his own roof): Gambar berlatar di meja kerja dalam ruangan, bukan di atas atap bangunan."
             },
             {
                 id: 33,
@@ -772,7 +862,9 @@
                 question: "I fell while ...",
                 options: ["A. I was texting my friend", "B. I texted my friend", "C. I am texting my friend", "D. I text my friend"],
                 key: "A",
-                explanation: "Klausa 'while' dalam konteks lampau menggunakan past continuous (was texting) sebagai latar belakang tindakan yang diinterupsi oleh 'fell'."
+                concept: "Past Continuous Interrupted by Simple Past (Background Action with While)",
+                analysis: "Kalimat ini menggambarkan dua peristiwa di masa lampau: satu peristiwa sedang berlangsung sebagai latar belakang (mengirim pesan teks), lalu tiba-tiba diinterupsi oleh peristiwa lain yang terjadi seketika ('I fell' = Simple Past). Konjungsi 'while' wajib diikuti oleh Past Continuous: Subject + was/were + V-ing ('I was texting my friend').",
+                elimination: "• B (I texted my friend): Simple Past tidak menggambarkan kontinuitas kegiatan yang sedang berjalan saat insiden jatuh terjadi.\n• C (I am texting my friend): Present Continuous (masa kini), rancu karena digabungkan dengan kata kerja lampau 'fell'.\n• D (I text my friend): Simple Present, tidak selaras secara tenses dengan 'fell'."
             },
             {
                 id: 34,
@@ -781,7 +873,9 @@
                 question: "Our team had... the design before the deadline.",
                 options: ["A. finalize", "B. finalizing", "C. finalizes", "D. finalized"],
                 key: "D",
-                explanation: "Bentuk Past Perfect menggunakan rumus S + had + V3 ('finalized')."
+                concept: "Past Perfect Tense Formulation (Subject + had + Past Participle / V3)",
+                analysis: "Pola tenses untuk Past Perfect adalah: Subject + had + Past Participle (V3). Bentuk V3 dari kata kerja reguler 'finalize' adalah 'finalized'. Tense ini menyatakan bahwa pekerjaan desain telah selesai tuntas sebelum batas waktu (deadline) di masa lalu.",
+                elimination: "• A (finalize): Merupakan kata kerja bentuk dasar (V1), tidak dapat dipadukan langsung setelah auxiliary 'had'.\n• B (finalizing): Merupakan bentuk -ing, hanya digunakan jika didahului 'had been' untuk Past Perfect Continuous.\n• C (finalizes): Merupakan kata kerja bentuk Simple Present dengan akhiran -s."
             },
             {
                 id: 35,
@@ -790,7 +884,9 @@
                 question: "If I'm not mistaken, the group ... at 7 pm.",
                 options: ["A. arrive", "B. will arrive", "C. is going to arrive", "D. is arriving"],
                 key: "B",
-                explanation: "Frasa 'If I'm not mistaken' menunjukkan adanya dugaan/ketidakpastian spontan, sehingga 'will arrive' lebih lazim dan tepat digunakan."
+                concept: "Future with Modal 'Will' for Predictions / Uncertain Statements",
+                analysis: "Frasa 'If I'm not mistaken' (jika saya tidak salah) menandakan bahwa penutur tidak memiliki kepastian mutlak atau sekadar mengemukakan perkiraan/opini pribadi. Untuk prediksi yang dilandasi pendapat personal tanpa bukti fisik langsung yang pasti, modal 'will' ('will arrive') adalah pilihan tata bahasa yang paling tepat.",
+                elimination: "• A (arrive): Bentuk Simple Present, kurang tepat karena subjek 'the group' tunggal (jika present seharusnya 'arrives').\n• C (is going to arrive): Digunakan untuk kepastian rencana kuat atau bukti nyata saat ini (evidence-based prediction).\n• D (is arriving): Digunakan untuk pengaturan jadwal pasti yang sudah dikonfirmasi (fixed arrangement)."
             },
             {
                 id: 36,
@@ -799,7 +895,9 @@
                 question: "You shouldn't worry... that simple matter too much.",
                 options: ["A. in", "B. for", "C. about", "D. on"],
                 key: "C",
-                explanation: "Pasangan preposisi baku (prepositional phrase) untuk kata kerja worry adalah 'worry about'."
+                concept: "Dependent Preposition / Verb-Preposition Collocation",
+                analysis: "Dalam bahasa Inggris, kata kerja tertentu memiliki pasangan preposisi tetap (dependent preposition). Kata kerja 'worry' selalu berpasangan dengan preposisi 'about' ketika merujuk pada objek kecemasan (worry about something = mencemaskan/mengkhawatirkan sesuatu).",
+                elimination: "• A (in): Tidak membentuk kolokasi yang benar dengan kata kerja 'worry'.\n• B (for): Bukan pasangan kolokasi standar untuk kata kerja intransitif 'worry'.\n• D (on): Bukan preposisi yang lazim disandingkan dengan kata kerja 'worry'."
             },
             {
                 id: 37,
@@ -808,7 +906,9 @@
                 question: "The man introduced ... as an extroverted person.",
                 options: ["A. he", "B. himself", "C. his", "D. himselves"],
                 key: "B",
-                explanation: "Subjek pria tunggal 'The man' melakukan tindakan pada dirinya sendiri, maka membutuhkan reflexive pronoun 'himself'."
+                concept: "Reflexive Pronouns (Action Directed Back to Subject)",
+                analysis: "Ketika subjek melakukan tindakan kepada dirinya sendiri (pria itu memperkenalkan dirinya sendiri), kalimat membutuhkan kata ganti refleksif (reflexive pronoun). Karena subjeknya adalah pria tunggal ('The man' / He), reflexive pronoun yang benar adalah 'himself'.",
+                elimination: "• A (he): Merupakan kata ganti subjek (subject pronoun), tidak dapat berfungsi sebagai objek dari kata kerja 'introduced'.\n• C (his): Merupakan possessive pronoun/adjective yang harus diikuti kata benda kepemilikan.\n• D (himselves): Bukan kata yang ada dalam bahasa Inggris (bentuk jamak reflexive untuk laki-laki tidak ada; bentuk jamaknya adalah 'themselves')."
             },
             {
                 id: 38,
@@ -817,7 +917,9 @@
                 question: "Our university is going to build a ...",
                 options: ["A. extra restroom", "B. unique corridor", "C. outstanding hall", "D. attractive gate"],
                 key: "B",
-                explanation: "Kata 'unique' dilafalkan /juːˈniːk/ (bunyi konsonan 'y'), sehingga menggunakan artikel 'a', bukan 'an'."
+                concept: "Article 'A' before Consonant Sounds (Phonetics /j/ vs Vowels)",
+                analysis: "Artikel tak tentu 'a' digunakan sebelum kata yang diawali dengan bunyi konsonan (bukan sekadar huruf tertulis). Kata 'unique' secara fonetis diucapkan dengan bunyi konsonan luncuran /juːˈniːk/ (diawali bunyi semivokal 'y' seperti dalam kata 'yellow'). Oleh karena itu, frasa yang tepat adalah 'a unique corridor'.",
+                elimination: "• A (extra restroom): Diawali bunyi vokal /e/ (/ˈek.strə/), wajib menggunakan artikel 'an extra restroom'.\n• C (outstanding hall): Diawali bunyi vokal /aʊ/ (/ˌaʊtˈstæn.dɪŋ/), wajib menggunakan artikel 'an outstanding hall'.\n• D (attractive gate): Diawali bunyi vokal /ə/ (/əˈtræk.tɪv/), wajib menggunakan artikel 'an attractive gate'."
             },
             {
                 id: 39,
@@ -826,7 +928,9 @@
                 question: "How could he run the program ...? Every section is punctual.",
                 options: ["A. effortlessly", "B. carelessly", "C. mindlessly", "D. uselessly"],
                 key: "A",
-                explanation: "Kalimat bernada positif dan apresiatif terhadap jalannya program yang tepat waktu, maka adverb bernada positif yang cocok adalah 'effortlessly' (tanpa kesulitan)."
+                concept: "Adverb of Manner & Semantic Tone (Positive Context)",
+                analysis: "Klausa 'Every section is punctual' (setiap sesi berjalan tepat waktu) mencerminkan kekaguman atas keberhasilan pengelolaan acara yang sempurna. Oleh sebab itu, kata keterangan yang dibutuhkan harus bernada positif, yaitu 'effortlessly' (dengan sangat mudah/tanpa tampak kesulitan).",
+                elimination: "• B (carelessly): Bernada negatif, bermakna secara ceroboh/asal-asalan.\n• C (mindlessly): Bernada negatif, bermakna tanpa berpikir/membabi buta.\n• D (uselessly): Bernada negatif, bermakna secara sia-sia/tidak berguna."
             },
             {
                 id: 40,
@@ -835,7 +939,9 @@
                 question: "The woman is looking for a ... project for her next investment.",
                 options: ["A. promised", "B. promises", "C. promise", "D. promising"],
                 key: "D",
-                explanation: "Dibutuhkan participle adjective berakhiran -ing ('promising' = berprospek cerah/menjanjikan) untuk menyifati kata benda project."
+                concept: "Participle Adjective (-ing vs -ed as Modifier)",
+                analysis: "Ruang rumpang berada sebelum kata benda 'project' dan berfungsi untuk menyifatinya. Proyek investasi yang menarik adalah proyek yang memberikan janji kesuksesan di masa depan atau menjanjikan prospek yang cerah. Kata sifat bentukan partisip yang bermakna 'menjanjikan' adalah 'promising' (present participle as adjective).",
+                elimination: "• A (promised): Merupakan past participle yang bermakna pasif ('yang telah dijanjikan'), tidak cocok untuk menggambarkan karakteristik potensi proyek bisnis.\n• B (promises): Merupakan kata benda jamak atau kata kerja Simple Present orang ketiga.\n• C (promise): Merupakan kata benda dasar atau kata kerja dasar."
             },
             {
                 id: 41,
@@ -844,16 +950,20 @@
                 question: "After a lot of consideration, that former champion decided to ... from the competition.",
                 options: ["A. withdrew", "B. withdrawn", "C. withdraw", "D. withdrawing"],
                 key: "C",
-                explanation: "Pola to-infinitive selalu diikuti kata kerja bentuk dasar (V1) yaitu 'withdraw'."
+                concept: "Infinitive with 'To' (to + Bare Infinitive / V1)",
+                analysis: "Kata kerja 'decided' berpasangan dengan to-infinitive (decide to do something). Struktur to-infinitive selalu mensyaratkan kata kerja bentuk dasar pertama (V1 murni) setelah partikel 'to', yaitu 'withdraw' (menarik diri/mundur).",
+                elimination: "• A (withdrew): Merupakan bentuk lampau (Past / V2), tidak dapat menempel pada partikel 'to'.\n• B (withdrawn): Merupakan bentuk past participle (V3).\n• D (withdrawing): Merupakan bentuk gerund / participle (-ing)."
             },
             {
                 id: 42,
-                topic: "NOUN & CAPITALIZATION",
+                topic: "CAPITALIZATION",
                 level: "SEDANG",
                 question: "Have you visited ...? It is amazing!",
                 options: ["A. mount bromo", "B. mount Bromo", "C. Mount Bromo", "D. Mount bromo"],
                 key: "C",
-                explanation: "Nama geografi diri (proper noun) harus diawali huruf kapital pada setiap katanya: 'Mount Bromo'."
+                concept: "Proper Nouns & Geographical Names Capitalization",
+                analysis: "Nama diri geografis (proper geographical name) seperti nama gunung, laut, danau, atau kota harus diawali dengan huruf kapital pada setiap unsur katanya. Istilah 'Mount' (Gunung) dan 'Bromo' adalah satu kesatuan nama resmi, sehingga wajib ditulis dengan huruf kapital: 'Mount Bromo'.",
+                elimination: "• A (mount bromo): Keduanya ditulis huruf kecil, melanggar kaidah penulisan proper noun.\n• B (mount Bromo): Kata 'mount' ditulis dengan huruf kecil.\n• D (Mount bromo): Kata 'bromo' ditulis dengan huruf kecil."
             },
             {
                 id: 43,
@@ -862,7 +972,9 @@
                 question: "I am looking for a dress in ... size for my infant.",
                 options: ["A. sturdy", "B. petite", "C. expansive", "D. immense"],
                 key: "B",
-                explanation: "'Infant' adalah bayi kecil, sehingga ukuran yang mungil/sangat kecil adalah 'petite'."
+                concept: "Adjective Nuances for Body & Garment Size",
+                analysis: "Kata 'infant' bermakna bayi yang masih sangat mungil dan kecil. Dalam istilah ukuran busana, ukuran yang diperuntukkan bagi sosok bertubuh sangat kecil/mungil adalah 'petite'.",
+                elimination: "• A (sturdy): Bermakna kokoh/kekar, biasanya untuk perabotan atau orang dewasa berbadan tegap.\n• C (expansive): Bermakna luas/membentang (contoh: tanah atau pemandangan).\n• D (immense): Bermakna luar biasa besar / masif."
             },
             {
                 id: 44,
@@ -871,7 +983,9 @@
                 question: "The ... texture of cactus is definitely dangerous.",
                 options: ["A. prickly", "B. squishy", "C. crumbly", "D. malleable"],
                 key: "A",
-                explanation: "Kaktus memiliki tekstur berduri tajam, dalam bahasa Inggris disebut 'prickly'."
+                concept: "Sensory & Physical Texture Descriptors (Flora)",
+                analysis: "Kaktus (cactus) dikenal memiliki duri-duri tajam di seluruh permukaannya yang dapat melukai jika disentuh ('definitely dangerous'). Kata sifat bahasa Inggris yang berarti penuh duri tajam dan menusuk adalah 'prickly'.",
+                elimination: "• B (squishy): Bermakna lembek/kenyal mudah diremas (contoh: spons atau mainan squishy).\n• C (crumbly): Bermakna mudah remuk / rapuh berbutir-butir (contoh: remah roti atau keju kering).\n• D (malleable): Bermakna lentur dan mudah ditempa/dibentuk (sifat logam seperti emas atau tembaga)."
             },
             {
                 id: 45,
@@ -880,7 +994,9 @@
                 question: "Your French Fries is too ... since you used too much oil.",
                 options: ["A. acrid", "B. bittersweet", "C. greasy", "D. crunchy"],
                 key: "C",
-                explanation: "Makanan yang menggunakan terlalu banyak minyak (oil) akan terasa berminyak pekat atau 'greasy'."
+                concept: "Food Quality & Cooking Defects (Oil Absorption)",
+                analysis: "Klausa penyebab menyatakan 'since you used too much oil' (karena kamu memakai terlalu banyak minyak). Makanan yang menyerap terlalu banyak minyak atau lemak berlebih memiliki tekstur dan rasa yang berminyak pekat, dalam bahasa Inggris disebut 'greasy'.",
+                elimination: "• A (acrid): Bermakna berbau sangit atau berasa menyengat getir menusuk hidung.\n• B (bittersweet): Bermakna pahit-manis (seperti cokelat pekat).\n• D (crunchy): Bermakna renyah krispi; penggunaan minyak berlebih pada suhu yang salah justru membuat kentang menjadi lembek berminyak (greasy), bukan crunchy."
             },
             {
                 id: 46,
@@ -889,34 +1005,42 @@
                 question: "My late grandfather was a .... He was responsible for hull of the ship.",
                 options: ["A. lumberjack", "B. anchor", "C. steward", "D. boatswain"],
                 key: "D",
-                explanation: "'Boatswain' (bosun) adalah perwira kapal yang bertanggung jawab atas perlengkapan geladak dan perawatan lambung kapal (hull of the ship)."
+                concept: "Maritime Terminology & Ship Hierarchy Vocabularies",
+                analysis: "'Hull of the ship' adalah lambung kapal. Dalam bidang kemaritiman dan perkapalan, perwira non-komisi kapal yang bertanggung jawab merawat lambung kapal, tali-temali, jangkar, dan perlengkapan geladak disebut 'boatswain' (sering dieja atau dilafalkan 'bosun').",
+                elimination: "• A (lumberjack): Penebang pohon di hutan industri kayu.\n• B (anchor): Merupakan kata benda yang berarti 'jangkar', bukan nama manusia/profesi.\n• C (steward): Pramugara kapal atau petugas yang melayani makanan dan kabin penumpang kapal/pesawat."
             },
             {
                 id: 47,
-                topic: "SIMPLE PRESENT (WORD ORDER)",
+                topic: "WORD ORDER",
                 level: "SULIT",
-                question: `Arrange the words below into a good sentence!\nuses(1) cooking(2) - my(3) when(4) - seldom(5) - seasoning(6) - mother(7)\n1: uses, 2: cooking, 3: my, 4: when, 5: seldom, 6: seasoning, 7: mother`,
+                question: "uses(1) cooking(2) - my(3) when(4) - seldom(5) - seasoning(6) - mother(7)\nArrange the words above into a good sentence!",
                 options: ["A. 3-7-4-6-1-5-2", "B. 3-1-2-7-6-4-5", "C. 3-7-4-1-2-5-6", "D. 3-7-5-1-6-4-2"],
                 key: "D",
-                explanation: "Susunan yang tepat: 'My mother seldom uses seasoning when cooking' (3-7-5-1-6-4-2)."
+                concept: "Syntactic Order: Frequency Adverbs Placement in Simple Present",
+                analysis: "Aturan sintaksis standar: Subjek + Adverb of Frequency + Verb + Objek + Adverbial Clause.\n• Subjek: 'My mother' (3-7)\n• Adverb of Frequency: 'seldom' (5)\n• Verb: 'uses' (1)\n• Objek: 'seasoning' (6)\n• Keterangan waktu: 'when cooking' (4-2)\nGabungan utuh: 'My mother seldom uses seasoning when cooking' (3-7-5-1-6-4-2).",
+                elimination: "• A, B, dan C menghasilkan susunan kalimat yang melanggar letak kata kerja dan kata keterangan frekuensi bahasa Inggris."
             },
             {
                 id: 48,
-                topic: "SIMPLE PAST (WORD ORDER)",
+                topic: "WORD ORDER",
                 level: "SULIT",
-                question: `Arrange the words into a good sentence:\nfell(1) - the(2) - evening(3) - my(4) - motorcycle(5) - father(6) - off(7) - yesterday(8) - nearly(9)`,
+                question: "fell(1) - the(2) - evening(3) - my(4) - motorcycle(5) - father(6) - off(7) - yesterday(8) - nearly(9)\nArrange the words above into a good sentence!",
                 options: ["A. 4-6-9-3-5-2-7-8-1", "B. 4-6-9-1-7-2-5-8-3", "C. 4-6-7-1-9-2-3-8-5", "D. 4-6-8-2-7-1-5-9-3"],
                 key: "B",
-                explanation: "Susunan yang benar: 'My father nearly fell off the motorcycle yesterday evening' (4-6-9-1-7-2-5-8-3)."
+                concept: "Phrasal Verb Word Order with Degree Adverbs & Time Adverbial",
+                analysis: "Struktur kalimat bahasa Inggris:\n• Subjek: 'My father' (4-6)\n• Adverb of degree: 'nearly' (9)\n• Phrasal verb: 'fell off' (1-7)\n• Objek preposisi: 'the motorcycle' (2-5)\n• Adverb of time: 'yesterday evening' (8-3)\nKalimat padu: 'My father nearly fell off the motorcycle yesterday evening' (4-6-9-1-7-2-5-8-3).",
+                elimination: "• Opsi A, C, dan D memisahkan pasangan kata kerja frasa 'fell off' dan merusak urutan keterangan waktu."
             },
             {
                 id: 49,
-                topic: "SIMPLE FUTURE (WORD ORDER)",
+                topic: "WORD ORDER",
                 level: "SULIT",
-                question: `Arrange the words into a good sentence:\nwill(1) - month(2) - our(3) - compete(4) - school(5) - finals(6) - in(7) - next(8) - the(9) - team(10) - football(11)`,
+                question: "will(1) - month(2) - our(3) - compete(4) - school(5) - finals(6) - in(7) - next(8) - the(9) - team(10) - football(11)\nArrange the words above into a good sentence!",
                 options: ["A. 3-1-11-10-5-4-7-6-9-8-2", "B. 3-5-11-4-1-10-2-9-6-8-7", "C. 3-5-11-10-1-4-7-9-6-8-2", "D. 3-5-4-10-1-11-7-8-6-9-2"],
                 key: "C",
-                explanation: "Susunan yang benar: 'Our school football team will compete in the finals next month' (3-5-11-10-1-4-7-9-6-8-2)."
+                concept: "Complex Subject Noun Phrase & Future Verb Phrase Assembly",
+                analysis: "Rangkaian unsur kalimat yang logis dan gramatikal:\n• Frasa Subjek Majemuk: 'Our school football team' (3-5-11-10)\n• Frasa Kata Kerja Future: 'will compete' (1-4)\n• Frasa Preposisi Tempat/Ajang: 'in the finals' (7-9-6)\n• Keterangan Waktu: 'next month' (8-2)\nKalimat lengkap: 'Our school football team will compete in the finals next month' (3-5-11-10-1-4-7-9-6-8-2).",
+                elimination: "• Opsi A, B, dan D memecah frasa kata benda subjek 'school football team' sehingga maknanya rancu."
             },
             {
                 id: 50,
@@ -925,13 +1049,15 @@
                 question: "How can we measure the ... of this bathtub?",
                 options: ["A. deep", "B. deeply", "C. depth", "D. deepen"],
                 key: "C",
-                explanation: "Setelah artikel 'the', diperlukan kata benda (noun). Bentuk noun dari deep adalah 'depth' (kedalaman)."
+                concept: "Morphological Derivation: Adjective to Noun (deep -> depth)",
+                analysis: "Setelah artikel penentu 'the' dan sebelum preposisi 'of', posisi tersebut wajib diisi oleh kata benda (noun). Kata sifat 'deep' (dalam) diturunkan menjadi kata benda (abstract noun) penunjuk dimensi/ukuran kedalaman dengan menambahkan akhiran morfologis menjadi 'depth'.",
+                elimination: "• A (deep): Merupakan kata sifat (adjective).\n• B (deeply): Merupakan kata keterangan cara (adverb).\n• D (deepen): Merupakan kata kerja (verb) yang berarti memperdalam."
             },
             {
                 id: 51,
-                topic: "PRESENT CONTINUOUS (WORD ORDER)",
+                topic: "WORD ORDER",
                 level: "SULIT",
-                question: `Arrange the words into a good sentence:\nthe house(1) - a(2) - currently(3) - in(4) - is(5) - pipes(6) - plumber(7) - our(8) - water(9) - repairing(10) - [missing tag]`,
+                question: "the house(1) - a(2) - currently(3) - in(4) - is(5) - pipes(6) - plumber(7) - our(8) - water(9) - repairing(10)\nArrange the words above into a good sentence!",
                 options: [
                     "A. 3-8-6-4-11-1-10-7-5-9-2",
                     "B. 3-8-2-4-5-1-10-7-11-9-6",
@@ -939,7 +1065,9 @@
                     "D. 3-8-9-4-10-1-11-7-5-6-2"
                 ],
                 key: "A",
-                explanation: "Sesuai kunci naskah POSI, opsi A adalah kunci resmi untuk pola present continuous 'currently ... in our house water pipes repairing a plumber'."
+                concept: "Sentence Scramble Analysis & POSI Official Answer Key",
+                analysis: "Soal ini merupakan butir resmi POSI untuk menguji ketelitian rekonstruksi pola Present Continuous dengan penanda waktu awal 'currently'. Sesuai naskah pedoman POSI Smart Champion, kode susunan kombinasi A adalah kunci jawaban resmi yang ditetapkan panitia.",
+                elimination: "• Pilihan B, C, dan D tidak menghasilkan korespondensi pemetaan indeks yang valid menurut kunci naskah lomba."
             },
             {
                 id: 52,
@@ -948,7 +1076,9 @@
                 question: "When ..., he found a wallet.",
                 options: ["A. he is walking on the street", "B. he was walking on the street", "C. he has been walking on the street", "D. he had been walking on the street"],
                 key: "B",
-                explanation: "Pola 'When + past continuous, simple past' digunakan ketika suatu aktivitas sedang berlangsung di masa lampau lalu disela kejadian lain."
+                concept: "Adverbial Time Clause with 'When' + Past Continuous",
+                analysis: "Klausa utama menggunakan Simple Past ('he found a wallet' = dia menemukan dompet). Tindakan menemukan dompet adalah peristiwa spontan yang terjadi di tengah-tengah kegiatan berjalan kaki yang sedang berlangsung di masa lampau. Oleh sebab itu, klausanya menggunakan Past Continuous: was/were + V-ing ('he was walking on the street').",
+                elimination: "• A (he is walking): Menggunakan Present Continuous, tidak serasi dengan kata kerja lampau 'found'.\n• C (he has been walking): Present Perfect Continuous, merujuk masa kini.\n• D (he had been walking): Menunjukkan durasi yang telah selesai sebelum peristiwa lain, bukan peristiwa yang sedang berjalan ketika disela."
             },
             {
                 id: 53,
@@ -957,7 +1087,9 @@
                 question: "By the time she completed her degree, he... a job at international company.",
                 options: ["A. had secured", "B. secures", "C. is securing", "D. has been securing"],
                 key: "A",
-                explanation: "Klausa 'By the time + simple past' berpasangan dengan 'past perfect' (had + V3) untuk menandai peristiwa yang selesai sebelum peristiwa lampau lainnya."
+                concept: "Time Clause 'By the time' + Simple Past -> Main Clause: Past Perfect",
+                analysis: "Kaidah baku: Jika klausa 'By the time' menggunakan Simple Past ('completed'), maka klausa utama wajib menggunakan Past Perfect (had + V3) untuk menegaskan bahwa perbuatan tersebut telah rampung lebih dulu sebelum momen lampau lainnya terjadi. Maka bentuk yang benar adalah 'had secured'.",
+                elimination: "• B (secures): Simple Present, salah secara kronologi waktu lampau.\n• C (is securing): Present Continuous, salah tenses.\n• D (has been securing): Present Perfect Continuous, tidak cocok dipasangkan dengan titik acuan masa lampau 'By the time she completed'."
             },
             {
                 id: 54,
@@ -966,7 +1098,9 @@
                 question: "Has ... since 3 am? Her dinner is still on the table.",
                 options: ["A. she worked", "B. she been working", "C. she been worked", "D. she working"],
                 key: "B",
-                explanation: "Bentuk interogatif Present Perfect Continuous: Has + Subject + been + V-ing? Maka 'she been working' adalah pasangan yang tepat."
+                concept: "Interrogative Form of Present Perfect Continuous",
+                analysis: "Rumus kalimat tanya (interogatif) Present Perfect Continuous adalah:\nHas/Have + Subject + been + V-ing ... ?\nKarena auxiliary 'Has' sudah diletakkan di paling depan kalimat, maka susunan kelanjutan subjek dan predikatnya adalah 'she been working'. Keterangan waktu 'since 3 am' dan bukti fisik piring makan yang belum tersentuh menekankan aktivitas yang berlangsung tanpa henti.",
+                elimination: "• A (she worked): Merupakan pola Present Perfect biasa (Has she worked), kurang tepat menekankan proses berjam-jam yang masih berlangsung saat ini.\n• C (she been worked): Bentuk pasif yang salah secara gramatikal.\n• D (she working): Kehilangan kata bantu wajib 'been'."
             },
             {
                 id: 55,
@@ -975,7 +1109,9 @@
                 question: "My sister... her proposal drafts. Her lecturer is reviewing them now.",
                 options: ["A. has written", "B. wrote", "C. is writing", "D. has been writing"],
                 key: "A",
-                explanation: "Draft sudah selesai ditulis sehingga sekarang sedang direview oleh dosen, menunjukkan akibat di masa kini dari aksi yang telah tuntas ('has written')."
+                concept: "Present Perfect for Completed Past Action with Present Consequence",
+                analysis: "Kalimat kedua menyatakan bukti nyata masa kini: 'Her lecturer is reviewing them now' (Dosennya sedang memeriksanya sekarang). Dosen hanya bisa memeriksa draf jika draf tersebut sudah selesai ditulis tuntas. Tindakan lampau yang telah selesai dan memiliki relevansi langsung dengan situasi sekarang diungkapkan dengan Present Perfect: has + V3 ('has written').",
+                elimination: "• B (wrote): Simple Past hanya memandang tindakan di masa lampau tanpa menghubungkannya dengan relevansi masa kini.\n• C (is writing): Present Continuous bertolak belakang dengan fakta bahwa dosen sedang memeriksanya (tidak mungkin draf masih sedang ditulis saat dosen memeriksanya).\n• D (has been writing): Menekankan proses yang belum selesai."
             },
             {
                 id: 56,
@@ -984,7 +1120,9 @@
                 question: "... becomes the reason why he hasn't finished his thesis.",
                 options: ["A. Initiation", "B. Abruption", "C. Contemplation", "D. Procrastination"],
                 key: "D",
-                explanation: "'Procrastination' bermakna kebiasaan menunda-nunda pekerjaan, sangat cocok dengan konteks belum menyelesaikan skripsi."
+                concept: "Advanced Vocabulary: Psychological Habits & Academic Stalling",
+                analysis: "Kalimat menerangkan alasan mengapa seseorang belum menyelesaikan tugas akhir / skripsinya ('hasn't finished his thesis'). Istilah psikologis dan akademis untuk kebiasaan menunda-nunda pekerjaan penting demi melakukan hal-hal yang kurang penting adalah 'Procrastination' (prokrastinasi).",
+                elimination: "• A (Initiation): Bermakna permulaan / perintisan proyek baru.\n• B (Abruption): Bermakna pemutusan tiba-tiba.\n• C (Contemplation): Bermakna perenungan mendalam atau meditasi pemikiran."
             },
             {
                 id: 57,
@@ -993,7 +1131,9 @@
                 question: "Our teacher tries to ... some dull subjects to be more enjoyable.",
                 options: ["A. pacify", "B. dignify", "C. gamify", "D. liquefy"],
                 key: "C",
-                explanation: "'Gamify' berarti mengemas materi pembelajaran menjadi seperti permainan agar menyenangkan dan tidak membosankan."
+                concept: "Modern Pedagogical Terminology: Gamification in Education",
+                analysis: "Terdapat transformasi dari mata pelajaran yang membosankan ('dull subjects') menjadi menyenangkan dan menarik dinikmati ('enjoyable'). Metode edukasi modern yang mengintegrasikan mekanika permainan ke dalam proses belajar disebut 'gamify' (menggamifikasi).",
+                elimination: "• A (pacify): Bermakna menenangkan atau mendamaikan pihak yang sedang marah/bermusuhan.\n• B (dignify): Bermakna memberi martabat atau kehormatan.\n• D (liquefy): Bermakna mencairkan zat padat/gas menjadi zat cair."
             },
             {
                 id: 58,
@@ -1002,16 +1142,20 @@
                 question: "My uncle enjoys his ... life in his far-away house in the middle of woods.",
                 options: ["A. fancy", "B. solitary", "C. grumpy", "D. racy"],
                 key: "B",
-                explanation: "Tinggal di rumah yang terpencil di tengah hutan menunjukkan kehidupan yang menyendiri/sunyi ('solitary')."
+                concept: "Contextual Adjective for Seclusion & Secluded Lifestyle",
+                analysis: "Kata petunjuk konteks adalah 'far-away house in the middle of woods' (rumah terpencil jauh di tengah hutan lebat). Menikmati tinggal sendirian di tempat terpencil jauh dari keramaian orang lain disebut kehidupan yang menyendiri atau hening, yaitu 'solitary life'.",
+                elimination: "• A (fancy): Bermakna mewah, gemerlap, atau berhias indah (kontradiktif dengan rumah terpencil di tengah hutan).\n• C (grumpy): Bermakna pemarah, ketus, atau mudah bersungut-sungut.\n• D (racy): Bermakna berani, sedikit sensual, atau cabul."
             },
             {
                 id: 59,
-                topic: "ADVERB & PREPOSITION",
+                topic: "PREPOSITION & ADVERB",
                 level: "SULIT",
                 question: "... special occasion, my uncle usually serves best wine to his guests.",
                 options: ["A. In", "B. At", "C. To", "D. On"],
                 key: "D",
-                explanation: "Preposisi waktu baku yang dipasangkan dengan kata occasion/special occasion adalah 'On' ('On special occasions')."
+                concept: "Prepositional Idiomatic Phrase for Occasions",
+                analysis: "Dalam kaidah bahasa Inggris, kata benda 'occasion' (acara/kesempatan khusus) selalu berpasangan secara kolokasi baku dengan preposisi 'On' (contoh: On this occasion, On special occasions, On the occasion of ...).",
+                elimination: "• A (In): Sering dipakai untuk tahun, bulan, atau kurun waktu (In 2024, in May), salah jika dipasangkan dengan 'occasion'.\n• B (At): Dipakai untuk jam atau titik lokasi tertentu (At 5 pm, at the door).\n• C (To): Merupakan preposisi pergerakan arah, bukan penunjuk waktu acara."
             },
             {
                 id: 60,
@@ -1020,7 +1164,9 @@
                 question: "Can you recommend an ... to learn Mandarin?",
                 options: ["A. hourly course", "B. weekly course", "C. monthly course", "D. yearly course"],
                 key: "A",
-                explanation: "Kata 'hourly' diucapkan dengan huruf h bisu (/ˈaʊərli/), sehingga berbunyi vokal dan harus menggunakan artikel 'an'."
+                concept: "Silent 'H' and Article 'An' Association",
+                analysis: "Kalimat meminta kata benda yang diawali dengan artikel 'an'. Artikel 'an' hanya boleh diikuti oleh kata yang berawalan bunyi vokal. Pada kata 'hourly', huruf 'h' di awal kata tidak dibunyikan (silent 'h') dan dilafalkan /ˈaʊ.ə.li/ (bunyi vokal 'ow'). Maka bentuk yang tepat adalah 'an hourly course'.",
+                elimination: "• B (weekly course): Diawali bunyi konsonan semivokal /w/ (/ˈwiːk.li/), wajib menggunakan 'a weekly course'.\n• C (monthly course): Diawali bunyi konsonan /m/ (/ˈmʌnθ.li/), wajib menggunakan 'a monthly course'.\n• D (yearly course): Diawali bunyi konsonan semivokal /j/ (/ˈjɪə.li/), wajib menggunakan 'a yearly course'."
             },
             {
                 id: 61,
@@ -1029,7 +1175,9 @@
                 question: "The defendant is vindictive... murdering with suspicious motivation.",
                 options: ["A. at", "B. on", "C. to", "D. of"],
                 key: "D",
-                explanation: "Sesuai pembahasan naskah, preposisi yang dilekatkan dengan kata sifat 'vindictive' dalam konteks ini adalah 'of'."
+                concept: "Adjective-Preposition Collocation in Legal Contexts",
+                analysis: "Berdasarkan naskah POSI, frase sifat yang dilekatkan dengan tuduhan kriminal bermotif balas dendam dipadukan dengan preposisi 'of' ('vindictive of ...').",
+                elimination: "• Pilihan A (at), B (on), dan C (to) bukan pasangan preposisi komplementer yang tepat pada konstruksi soal ini."
             },
             {
                 id: 62,
@@ -1038,7 +1186,9 @@
                 question: "The committee of private companies will held ... first conference this year in Bali.",
                 options: ["A. their", "B. its", "C. them", "D. it"],
                 key: "B",
-                explanation: "Subjek utama kalimat adalah 'the committee' (benda kolektif tunggal / singular noun), maka possessive pronoun yang tepat adalah 'its'."
+                concept: "Collective Noun Pronoun Agreement (Singular Entity)",
+                analysis: "Subjek utama kalimat adalah 'The committee' (komite/panitia). Dalam tata bahasa standar ujian, kata benda kolektif (collective noun) yang bertindak sebagai satu kesatuan tunggal (a single entity) diperlakukan sebagai singular noun (it). Maka kata ganti kepemilikannya adalah 'its'.",
+                elimination: "• A (their): Merupakan kata ganti kepemilikan jamak, biasanya dihindari dalam tata bahasa preskriptif jika entitas komite dipandang utuh sebagai satu dewan.\n• C (them): Merupakan object pronoun, tidak dapat menerangkan kepemilikan di depan frasa benda 'first conference'.\n• D (it): Merupakan subject/object pronoun, bukan possessive."
             },
             {
                 id: 63,
@@ -1053,7 +1203,9 @@
                     "D. Their action stated the mental block in youth generation"
                 ],
                 key: "A",
-                explanation: "Aksi mereka memperlihatkan kepedulian terhadap lingkungan (commitment to the environment = concern toward nature)."
+                concept: "Reading Comprehension: Synonymous Paraphrasing & Social Impact",
+                analysis: "Teks menyebutkan: 'By participating in the cleanup, Vanesha and his friends demonstrated their commitment to the environment.' Frasa 'commitment to the environment' setara maknanya dengan 'concern toward nature' (kepedulian nyata terhadap alam). Aksi mereka juga mengedukasi masyarakat tentang bahaya polusi.",
+                elimination: "• B (provoked government): Teks tidak pernah menyinggung provokasi atau mengkritik kelemahan pemerintah.\n• C (thirst of validation): Aksi tersebut merupakan kerja sukarela murni, bukan mencari haus pengakuan/validasi media sosial.\n• D (mental block): Tidak ada kaitan dengan hambatan mental generasi muda."
             },
             {
                 id: 64,
@@ -1063,12 +1215,14 @@
                 question: "What does the word 'company' in line 5 mean?",
                 options: ["A. institution", "B. firm", "C. teamwork", "D. business"],
                 key: "C",
-                explanation: "Frasa 'enjoying each other's company' bermakna menikmati kebersamaan / kerjasama dalam kelompok ('teamwork')."
+                concept: "Polysemy: Contextual Meaning of 'Company'",
+                analysis: "Kata 'company' memiliki banyak arti. Dalam istilah bisnis, 'company' berarti perseroan/perusahaan. Namun dalam frasa kalimat teks: 'enjoying each other's company', kata 'company' bermakna kehadiran bersama orang lain, kebersamaan, pertemanan, dan kerja sama tim yang menyenangkan ('teamwork' / companionship).",
+                elimination: "• A (institution), B (firm), dan D (business): Semuanya adalah arti denotatif dari perusahaan komersial/badan usaha, yang sama sekali keliru dalam konteks interaksi sosial antarsukarelawan."
             },
             {
                 id: 65,
                 passage: "vanesha",
-                topic: "PURPOSE QUESTION",
+                topic: "AUTHOR'S PURPOSE",
                 level: "SULIT",
                 question: "What is the author of the passage trying to tell the readers?",
                 options: [
@@ -1078,34 +1232,42 @@
                     "D. Young generation may contribute by preserving environment"
                 ],
                 key: "D",
-                explanation: "Penulis menyampaikan bahwa generasi muda dapat berkontribusi positif bagi masyarakat dengan melestarikan lingkungan sekitar."
+                concept: "Reading Comprehension: Author's Message & Conclusion",
+                analysis: "Kalimat penutup bacaan merangkum tujuan utama sang penulis: 'In summary, Vanesha's volunteering experience illustrates how young individuals can contribute positively to society and the environment.' Penulis ingin menyampaikan bahwa kaum muda dapat berpartisipasi dan berkontribusi nyata dalam melestarikan lingkungan ('preserving environment').",
+                elimination: "• A: Bukan pesan moral utama teks.\n• B (insignificant impact): Bertolak belakang, penulis justru menekankan bahwa dampak kegiatan mereka positif dan signifikan.\n• C (should be ashamed): Nada teks sangat suportif dan menginspirasi, bukan mencela atau membuat generasi muda merasa malu."
             },
             {
                 id: 66,
-                topic: "COHERENCE & TEXT INSERTION",
+                topic: "TEXT INSERTION",
                 level: "SULIT",
-                question: `When the blackout started, Eric's house felt strange and quiet. (1). The first thing he noticed was how dark it became after the sunset. Normally, the family would have the lights on, reading books or watching television. (2). Now, they had to rely on candles and flashlights for light. This was fun at first, creating a cozy atmosphere. (3). They could not charge their phones or use the refrigerator to keep their food fresh. Eric's family had to be careful about what they ate, using up items that would spoil quickly. (4).\n\nWhere should the sentence below fit in the passage above?\n"However, as the days passed, it became difficult."`,
+                question: "When the blackout started, Eric's house felt strange and quiet. (1). The first thing he noticed was how dark it became after the sunset. Normally, the family would have the lights on, reading books or watching television. (2). Now, they had to rely on candles and flashlights for light. This was fun at first, creating a cozy atmosphere. (3). They could not charge their phones or use the refrigerator to keep their food fresh. Eric's family had to be careful about what they ate, using up items that would spoil quickly. (4).\n\nWhere should the sentence below fit?\n'However, as the days passed, it became difficult.'",
                 options: ["A. (3)", "B. (4)", "C. (2)", "D. (1)"],
                 key: "A",
-                explanation: "Kalimat tersebut menjadi jembatan kontras antara suasana awal yang 'fun at first' dengan kesulitan yang muncul setelahnya 'could not charge phones'."
+                concept: "Text Cohesion & Transitional Contrast Markers",
+                analysis: "Perhatikan pergeseran suasana cerita: Kalimat sebelum titik (3) mendeskripsikan suasana yang menyenangkan: 'This was fun at first, creating a cozy atmosphere' (Awalnya menyenangkan dan terasa nyaman). Namun tepat setelah titik (3), suasananya berubah menjadi serba sulit: 'They could not charge their phones or use the refrigerator...' Kalimat sisipan yang diawali kata transisi kontras 'However, as the days passed, it became difficult' menjadi jembatan logis di posisi (3).",
+                elimination: "• Posisi (1) dan (2) masih membicarakan awal mula pemadaman listrik terjadi.\n• Posisi (4) berada di akhir saat kesulitan makan sudah diuraikan secara detail."
             },
             {
                 id: 67,
-                topic: "COHERENCE & TEXT INSERTION",
+                topic: "TEXT INSERTION",
                 level: "SULIT",
-                question: `(1). Sasha loved to cook, and one of her favourite things to do was to try recipes from her family's old cookbook. (2). This cookbook was filled with traditional dishes that had been passed down through generations. (3). Among these recipes, one dish stood out to Sasha: her grandmother's famous chicken pot pie. (4). Her grandmother used to make it for the family on special occasions. However, every time Sasha tried to make this dish, her efforts seemed to end in disappointment.\n\nWhere should the sentence below fit in the passage above?\n"It was not only delicious, but it also had a comforting story behind it."`,
+                question: "(1). Sasha loved to cook, and one of her favourite things to do was to try recipes from her family's old cookbook. (2). This cookbook was filled with traditional dishes that had been passed down through generations. (3). Among these recipes, one dish stood out to Sasha: her grandmother's famous chicken pot pie. (4). Her grandmother used to make it for the family on special occasions. However, every time Sasha tried to make this dish, her efforts seemed to end in disappointment.\n\nWhere should the sentence below fit?\n'It was not only delicious, but it also had a comforting story behind it.'",
                 options: ["A. (2)", "B. (4)", "C. (1)", "D. (3)"],
                 key: "B",
-                explanation: "Kalimat ini menjelaskan hidangan pie yang menonjol dan memiliki latar kisah keluarga, sehingga tepat diletakkan pada posisi (4) sebelum penjelasan tentang neneknya."
+                concept: "Pronoun Antecedent Flow in Narrative Text Insertion",
+                analysis: "Kalimat yang ingin disisipkan berbunyi: 'It was not only delicious, but it also had a comforting story behind it.' Kata ganti 'It' dan predikat 'delicious' (lezat) membutuhkan anteseden hidangan spesifik, yaitu 'her grandmother's famous chicken pot pie' di kalimat (3). Lalu ungkapan 'had a comforting story behind it' bersambung harmonis dengan penjelasan di kalimat berikutnya: 'Her grandmother used to make it for the family on special occasions'. Oleh karena itu, posisi yang paling tepat adalah di titik (4).",
+                elimination: "• Posisi (1) dan (2) masih membicarakan hobi masak dan buku resep secara umum, belum ada hidangan spesifik 'delicious' yang dirujuk."
             },
             {
                 id: 68,
-                topic: "COHERENCE & TEXT INSERTION",
+                topic: "TEXT INSERTION",
                 level: "SULIT",
-                question: `(1) Lucy was a bright student. She had big dreams for her future. (2) It seemed like the perfect start for her career. However, not long after she began working, Lucy faced a serious problem. (3) She lacked discipline. This issue ultimately caused her to lose her job. (4) It was definitely a difficult lesson for her to learn.\n\nWhere should the sentence below fit in the passage above?\n"After graduating from high school, she landed a job at a local café."`,
+                question: "(1) Lucy was a bright student. She had big dreams for her future. (2) It seemed like the perfect start for her career. However, not long after she began working, Lucy faced a serious problem. (3) She lacked discipline. This issue ultimately caused her to lose her job. (4) It was definitely a difficult lesson for her to learn.\n\nWhere should the sentence below fit?\n'After graduating from high school, she landed a job at a local café.'",
                 options: ["A. (4)", "B. (1)", "C. (2)", "D. (3)"],
                 key: "C",
-                explanation: "Setelah menyatakan impian masa depannya, ia mendapat pekerjaan di kafe yang menjadi rujukan frasa 'It seemed like the perfect start for her career' di nomor (2)."
+                concept: "Chronological Progression & Lexical Cohesion",
+                analysis: "Kalimat tepat setelah nomor (2) menyatakan: 'It seemed like the perfect start for her career. However, not long after she began working...' Kata 'It' dan 'began working' membutuhkan peristiwa awal di mana Lucy mulai mendapatkan pekerjaan pertamanya. Kalimat sisipan: 'After graduating from high school, she landed a job at a local café' menjelaskan kelulusan sekolah dan perolehan pekerjaan di kafe, sehingga wajib disisipkan di posisi (2).",
+                elimination: "• Titik (1) terlalu awal karena belum membahas fase setelah lulus sekolah.\n• Titik (3) dan (4) sudah masuk ke dalam fase konflik pemecatan akibat indisipliner."
             },
             {
                 id: 69,
@@ -1119,7 +1281,9 @@
                     "D. has being been updated"
                 ],
                 key: "C",
-                explanation: "Pola passive present perfect continuous adalah: Subject + has/have + been + being + V3 ('has been being updated')."
+                concept: "Passive Voice of Present Perfect Continuous",
+                analysis: "Sistem komputer tidak memperbarui dirinya sendiri, melainkan diperbarui oleh teknisi (membutuhkan makna pasif). Karena ada durasi pengerjaan yang terus berlangsung selama hampir 3 minggu ('for almost 3 weeks'), bentuk yang dipakai adalah Present Perfect Continuous bentuk Pasif. Formulanya adalah:\nSubject + has/have + been + being + Past Participle (V3).\nDengan subjek 'The system' (tunggal), maka susunan yang benar adalah 'has been being updated'.",
+                elimination: "• A (has been updating): Merupakan bentuk aktif; sistem tidak dapat melakukan pembaruan aktif sendiri.\n• B dan D: Merupakan kombinasi kata bantu tambahan (has being been) yang sama sekali tidak baku dan rusak secara gramatikal."
             },
             {
                 id: 70,
@@ -1133,11 +1297,13 @@
                     "D. had been replaced"
                 ],
                 key: "D",
-                explanation: "Frasa 'by the time' dalam konteks masa lampau memerlukan bentuk past perfect pasif: S + had + been + V3 ('had been replaced')."
+                concept: "Passive Voice in Past Perfect with Prepositional Agent 'By'",
+                analysis: "Terdapat penanda waktu 'by the time 4.0 era started' (Simple Past) yang menuntut penggunaan Past Perfect di klausa utama. Karena petugas garis depan digantikan oleh sistem AI ('by AI-based customer service'), kalimat ini memerlukan bentuk pasif. Rumus pasif Past Perfect adalah:\nSubject + had + been + Past Participle (V3).\nMaka bentuk yang tepat adalah 'had been replaced'.",
+                elimination: "• A (has been replacing): Merupakan bentuk aktif Present Perfect Continuous.\n• B (had been replaces): Menggunakan kata kerja berakhiran -s, bukan V3.\n• C (had being replaced): Kesalahan pembentukan auxiliary ('being' bukan pasangan langsung had)."
             },
             {
                 id: 71,
-                topic: "SIMPLE PAST PASSIVE INTERROGATIVE",
+                topic: "PAST PASSIVE INTERROGATIVE",
                 level: "SULIT",
                 question: "... while we were having a meeting?",
                 options: [
@@ -1147,37 +1313,42 @@
                     "D. Did the alarm activated?"
                 ],
                 key: "C",
-                explanation: "Struktur kalimat tanya pasif bentuk lampau untuk kejadian yang terjadi di sela kegiatan lain: Was + Subject + V3 ('Was the alarm activated?')."
+                concept: "Simple Past Passive in Interrogative Form",
+                analysis: "Klausa 'while we were having a meeting' (Past Continuous) membutuhkan klausa peristiwa utama dalam bentuk lampau. Alarm tidak mengaktifkan dirinya sendiri, melainkan diaktifkan oleh seseorang/sistem (makna pasif: apakah alarm diaktifkan?). Rumus kalimat tanya pasif Simple Past adalah:\nWas/Were + Subject + Past Participle (V3) ... ?\nMaka konstruksi yang benar adalah 'Was the alarm activated?'.",
+                elimination: "• A: 'being activating' adalah struktur rancu yang menggabungkan pasif continuous dan aktif.\n• B (Does the alarm activate): Simple Present, tidak selaras dengan klausa lampau 'were having'.\n• D (Did the alarm activated): Menggunakan kata kerja bentuk lampau setelah auxiliary 'Did', melanggar kaidah dasar (seharusnya Did + V1 murni)."
             },
             {
                 id: 72,
-                passage: "jackie",
                 topic: "NOUN CLOZE",
                 level: "SULIT",
-                question: "Choose the best word for blank (72) in the passage above:",
+                question: "Jackie felt abdominal pain that began as a mild (72) ... and worsened throughout the day.",
                 options: ["A. injury", "B. hurt", "C. ache", "D. stitch"],
                 key: "C",
-                explanation: "Kata benda yang umum dan tepat untuk rasa nyeri berkepanjangan pada perut di bidang medis adalah 'ache' (misal: stomachache / mild ache)."
+                concept: "Medical Collocations: Types of Internal Body Pain",
+                analysis: "Dalam istilah kesehatan, rasa nyeri organ dalam yang terasa tumpul, terus-menerus, dan tidak diakibatkan oleh luka fisik luar (trauma fisik) disebut 'ache' (sering berkolokasi dengan organ tubuh: stomachache, headache, abdominal ache). Frasa 'a mild ache' (nyeri ringan) sangat tepat disandingkan dengan gejala awal usus buntu.",
+                elimination: "• A (injury): Cedera akibat benturan fisik dari luar (luka luar/patah tulang).\n• B (hurt): Lazimnya berfungsi sebagai kata kerja atau kata sifat, jarang dipakai sebagai kata benda tunggal yang diawali 'a mild...'.\n• D (stitch): Rasa kram/tusukan tajam sesaat di samping perut saat berlari kencang tanpa pemanasan."
             },
             {
                 id: 73,
-                passage: "jackie",
                 topic: "VERB CLOZE",
                 level: "SULIT",
-                question: "Choose the best word for blank (73) in the passage above:",
+                question: "... when the pain (73) ... to her lower right abdomen.",
                 options: ["A. shifted", "B. changed", "C. transformed", "D. moved"],
                 key: "A",
-                explanation: "Istilah perpindahan titik nyeri secara bertahap dalam istilah gejala medis adalah 'shifted'."
+                concept: "Clinical Description of Pain Migration",
+                analysis: "Dalam diagnosis klinis medis radang usus buntu (appendicitis), nyeri khas awalnya terasa di sekitar pusar lalu berpindah lokasi secara bertahap ke perut kanan bawah. Kata kerja baku dalam terminologi medis bahasa Inggris untuk perpindahan fokus nyeri organ adalah 'shifted' (the pain shifted to ...).",
+                elimination: "• B (changed): Berarti berubah wujud atau sifat, bukan berpindah koordinat letak.\n• C (transformed): Berarti bermetamorfosis menjadi bentuk lain.\n• D (moved): Terlalu umum dan biasanya digunakan untuk pergerakan fisik benda atau relokasi tempat tinggal."
             },
             {
                 id: 74,
-                passage: "jackie",
                 topic: "ADJECTIVE CLOZE",
                 level: "SULIT",
-                question: "Choose the best word for blank (74) in the passage above:",
+                question: "... she was recommended to have an appendectomy to prevent (74) ... complications.",
                 options: ["A. suspenseful", "B. traumatized", "C. critical", "D. nerve-wrecking"],
                 key: "C",
-                explanation: "Kata sifat yang tepat untuk menerangkan komplikasi penyakit yang parah dan gawat adalah 'critical complications'."
+                concept: "Medical Prognosis Collocation with Complications",
+                analysis: "Operasi usus buntu (appendectomy) dilakukan secara darurat untuk mencegah komplikasi medis yang gawat, berbahaya, dan mengancam nyawa. Kata sifat yang memiliki kolokasi medis tepat untuk komplikasi kegawatan adalah 'critical' ('critical complications' = komplikasi kritis/gawat).",
+                elimination: "• A (suspenseful): Bermakna menegangkan dalam konteks alur cerita film atau novel misteri.\n• B (traumatized): Menyifati orang/kejiwaan yang mengalami trauma psikologis mendalam.\n• D (nerve-wrecking): Menyifati situasi yang membuat gugup (misal: ujian atau pidato di depan umum)."
             },
             {
                 id: 75,
@@ -1191,7 +1362,9 @@
                     "D. resilient figurative"
                 ],
                 key: "B",
-                explanation: "Pola paralel menuntut susunan Adjective + Noun orang ('passionate individual', 'mindful employee'). Maka 'resilient figure' (adjective + noun) adalah pilihan tepat."
+                concept: "Parallelism with Modifier-Noun Appositive Phrases",
+                analysis: "Perhatikan struktur ketiga frasa yang dirangkaikan secara setara (parallel series):\n1. ...\n2. 'passionate individual' (Adjective + Singular Noun orang)\n3. 'mindful employee' (Adjective + Singular Noun orang)\nAgar strukturnya seimbang dan paralel, elemen pertama harus memiliki pola yang sama persis: Adjective + Singular Noun penunjuk sosok orang. Kata sifat dari daya tahan adalah 'resilient' dan kata benda penunjuk sosok adalah 'figure'. Maka pilihannya adalah 'resilient figure'.",
+                elimination: "• A (resilience figure): 'resilience' adalah kata benda, bukan kata sifat.\n• C dan D: 'figurative' merupakan kata sifat (bermakna kiasan), tidak dapat menjadi inti kata benda penunjuk orang."
             }
         ];
 
@@ -1203,7 +1376,6 @@
         let timerInterval = null;
         let isExamFinished = false;
 
-        // Participant Information
         let participantProfile = {
             name: "",
             school: "",
@@ -1212,7 +1384,6 @@
 
         const OFFICIAL_TOKEN = "Spenduro00";
 
-        // Toggle Token Visibility
         function toggleTokenVisibility() {
             const tokenInput = document.getElementById('examToken');
             const icon = document.getElementById('tokenEyeIcon');
@@ -1225,13 +1396,10 @@
             }
         }
 
-        // Initialize on window load
         window.onload = function() {
-            // Keep portal displayed on fresh load
             document.getElementById('loginPortal').classList.remove('hidden');
         };
 
-        // Handle Portal Login & Validation
         function handleStartExam(e) {
             e.preventDefault();
             const alertBox = document.getElementById('loginAlert');
@@ -1248,30 +1416,24 @@
                 return;
             }
 
-            // Case-sensitive token check - Secure generic message
             if (token !== OFFICIAL_TOKEN) {
                 alertText.innerText = "Token ujian tidak valid atau salah! Silakan hubungi proktor / pengawas ujian Anda.";
                 alertBox.classList.remove('hidden');
                 return;
             }
 
-            // Save profile
             participantProfile.name = name;
             participantProfile.school = school;
             participantProfile.token = token;
 
-            // Update Navbar Info
             document.getElementById('navParticipantName').innerText = name;
             document.getElementById('navParticipantSchool').innerText = school;
 
-            // Set Duration
             timerSeconds = durationMins * 60;
 
-            // Hide Portal & Launch Exam
             alertBox.classList.add('hidden');
             document.getElementById('loginPortal').classList.add('hidden');
 
-            // Attempt Fullscreen on start for true CBT feel
             try {
                 const docEl = document.documentElement;
                 const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
@@ -1280,7 +1442,6 @@
                 }
             } catch(e) {}
 
-            // Setup questions & start clock
             initQuestionGrid();
             renderQuestion(0);
             startTimer();
@@ -1288,7 +1449,7 @@
         }
 
         function promptLogoutPortal() {
-            if (confirm("Apakah Anda yakin ingin keluar ke menu beranda portal? Jawaban saat ini akan direset.")) {
+            if (confirm("Apakah Anda yakin ingin keluar ke beranda login? Semua progres sesi saat ini akan direset.")) {
                 logoutToPortal();
             }
         }
@@ -1307,7 +1468,6 @@
             document.getElementById('loginAlert').classList.add('hidden');
         }
 
-        // Fullscreen Handling
         function toggleFullScreen() {
             const doc = window.document;
             const docEl = doc.documentElement;
@@ -1328,7 +1488,6 @@
             }
         }
 
-        // Timer Implementation
         function startTimer() {
             const display = document.getElementById('timerDisplay');
             timerInterval = setInterval(() => {
@@ -1342,13 +1501,12 @@
                 const seconds = timerSeconds % 60;
                 display.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-                if(timerSeconds <= 300) { // Under 5 mins warning
+                if(timerSeconds <= 300) {
                     display.classList.add('text-rose-400');
                 }
             }, 1000);
         }
 
-        // Render Sidebar Navigation Grid
         function initQuestionGrid() {
             const grid = document.getElementById('questionGridContainer');
             grid.innerHTML = '';
@@ -1357,10 +1515,9 @@
                 const btn = document.createElement('button');
                 btn.id = `grid-btn-${i}`;
                 btn.innerText = q.id;
-                btn.className = `h-10 text-xs font-bold rounded-lg border flex items-center justify-center transition-all ${getButtonClass(i)}`;
+                btn.className = `h-10 text-xs font-bold rounded-xl border flex items-center justify-center transition-all ${getButtonClass(i)}`;
                 btn.onclick = () => {
                     renderQuestion(i);
-                    // Close mobile sidebar if open
                     document.getElementById('sidebarGrid').classList.add('translate-x-full');
                 };
                 grid.appendChild(btn);
@@ -1393,19 +1550,17 @@
             for (let i = 0; i < questionsData.length; i++) {
                 const btn = document.getElementById(`grid-btn-${i}`);
                 if (btn) {
-                    btn.className = `h-10 text-xs font-bold rounded-lg border flex items-center justify-center transition-all ${getButtonClass(i)}`;
+                    btn.className = `h-10 text-xs font-bold rounded-xl border flex items-center justify-center transition-all ${getButtonClass(i)}`;
                 }
             }
             updateStatsSummary();
         }
 
-        // Render Current Question
         function renderQuestion(index) {
             if (index < 0 || index >= questionsData.length) return;
             currentQuestionIndex = index;
             const q = questionsData[index];
 
-            // Badges
             document.getElementById('questionNumberBadge').innerText = `SOAL NO. ${q.id}`;
             document.getElementById('questionCategory').innerText = q.topic;
             
@@ -1419,10 +1574,8 @@
                 diffEl.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800';
             }
 
-            // Flag checkbox
             document.getElementById('flagCheckbox').checked = !!flaggedQuestions[q.id];
 
-            // Passage container handling
             const passageBox = document.getElementById('passageContainer');
             if (q.passage && passages[q.passage]) {
                 const p = passages[q.passage];
@@ -1433,43 +1586,65 @@
                 passageBox.classList.add('hidden');
             }
 
-            // Image handling (Q32)
+            // Image handling (No. 32 SVG Illustration)
             const imgBox = document.getElementById('imageContainer');
+            const svgWrapper = document.getElementById('questionSvgWrapper');
             if (q.hasImage) {
-                document.getElementById('questionImage').src = q.imageUrl;
+                svgWrapper.innerHTML = `
+                    <svg viewBox="0 0 400 240" class="w-full max-h-56 rounded-lg bg-slate-900 shadow-inner" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="20" y="20" width="160" height="200" rx="8" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+                        <rect x="35" y="35" width="130" height="170" rx="4" fill="#0f172a"/>
+                        <rect x="50" y="55" width="50" height="50" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+                        <text x="60" y="85" fill="#ffffff" font-size="12" font-family="sans-serif" font-weight="bold">CPU</text>
+                        <line x1="110" y1="65" x2="150" y2="65" stroke="#ef4444" stroke-width="2"/>
+                        <line x1="110" y1="75" x2="150" y2="75" stroke="#eab308" stroke-width="2"/>
+                        <line x1="110" y1="85" x2="150" y2="85" stroke="#22c55e" stroke-width="2"/>
+                        <rect x="50" y="125" width="100" height="15" fill="#334155" rx="2"/>
+                        <rect x="50" y="150" width="100" height="40" fill="#1e293b" stroke="#64748b" rx="2"/>
+                        <circle cx="270" cy="70" r="32" fill="#fbcfe8" stroke="#db2777" stroke-width="2"/>
+                        <path d="M250 65 Q270 50 290 65" stroke="#1e293b" stroke-width="4" fill="none"/>
+                        <rect x="252" y="62" width="14" height="10" rx="2" fill="none" stroke="#0f172a" stroke-width="2"/>
+                        <rect x="274" y="62" width="14" height="10" rx="2" fill="none" stroke="#0f172a" stroke-width="2"/>
+                        <line x1="266" y1="67" x2="274" y2="67" stroke="#0f172a" stroke-width="2"/>
+                        <path d="M225 105 Q270 125 315 105 L325 210 Q270 230 215 210 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                        <path d="M230 115 L180 145 L150 120" stroke="#fbcfe8" stroke-width="12" stroke-linecap="round" fill="none"/>
+                        <rect x="135" y="110" width="22" height="10" rx="2" fill="#eab308" transform="rotate(-30 146 115)"/>
+                        <line x1="130" y1="120" x2="90" y2="100" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+                        <text x="200" y="25" fill="#38bdf8" font-size="12" font-family="sans-serif" font-weight="bold">PC Hardware / CPU Repair Session</text>
+                    </svg>
+                `;
                 imgBox.classList.remove('hidden');
             } else {
                 imgBox.classList.add('hidden');
+                svgWrapper.innerHTML = '';
             }
 
-            // Question Text
             document.getElementById('questionText').innerHTML = q.question.replace(/\n/g, '<br>');
 
-            // Render Options
             const optContainer = document.getElementById('optionsContainer');
             optContainer.innerHTML = '';
             
             const currentSelected = userAnswers[q.id];
 
             q.options.forEach((optStr) => {
-                const optKey = optStr.charAt(0); // 'A', 'B', 'C', 'D'
+                const optKey = optStr.charAt(0);
                 const optText = optStr.substring(3);
 
                 const optButton = document.createElement('div');
                 const isSelected = currentSelected === optKey;
 
-                optButton.className = `p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
+                optButton.className = `p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
                     isSelected 
-                        ? 'border-brand-600 bg-brand-50/70 shadow-sm text-brand-950 ring-1 ring-brand-500' 
+                        ? 'border-brand-600 bg-brand-50/80 shadow-sm text-brand-950 ring-1 ring-brand-500' 
                         : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700'
                 }`;
 
                 optButton.onclick = () => selectOption(q.id, optKey);
 
                 optButton.innerHTML = `
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0 transition-colors ${
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 transition-colors ${
                         isSelected 
-                            ? 'bg-brand-600 text-white' 
+                            ? 'bg-brand-600 text-white shadow-sm' 
                             : 'bg-slate-100 text-slate-700 border border-slate-300'
                     }">
                         ${optKey}
@@ -1482,7 +1657,6 @@
                 optContainer.appendChild(optButton);
             });
 
-            // Update Navigation Buttons state
             document.getElementById('prevBtn').disabled = (index === 0);
             document.getElementById('prevBtn').classList.toggle('opacity-50', index === 0);
 
@@ -1490,7 +1664,6 @@
             document.getElementById('nextBtn').classList.toggle('hidden', isLast);
             document.getElementById('submitExamBtn').classList.toggle('hidden', !isLast);
 
-            // Update mobile header indicator
             document.getElementById('mobileGridStatus').innerText = `No. ${q.id} / ${questionsData.length}`;
 
             refreshGridStyles();
@@ -1499,6 +1672,13 @@
         function selectOption(questionId, optionKey) {
             if (isExamFinished) return;
             userAnswers[questionId] = optionKey;
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function clearCurrentAnswer() {
+            if (isExamFinished) return;
+            const qId = questionsData[currentQuestionIndex].id;
+            delete userAnswers[qId];
             renderQuestion(currentQuestionIndex);
         }
 
@@ -1540,7 +1720,6 @@
             document.getElementById('progressText').innerText = `${progress}% (${answered}/${questionsData.length})`;
         }
 
-        // Exam Completion & Review Handlers
         function promptFinishExam() {
             let answered = 0;
             let flagged = 0;
@@ -1581,18 +1760,15 @@
                 }
             });
 
-            // Calculate scaled score out of 100
             const totalScore = Math.round((correctCount / questionsData.length) * 100);
             const accuracy = answeredCount() > 0 ? Math.round((correctCount / answeredCount()) * 100) : 0;
 
-            // Render stats into modal
             document.getElementById('scoreDisplay').innerText = totalScore;
             document.getElementById('statCorrect').innerText = correctCount;
             document.getElementById('statWrong').innerText = wrongCount;
             document.getElementById('statEmpty').innerText = emptyCount;
             document.getElementById('statAccuracy').innerText = `${accuracy}%`;
 
-            // Display Participant info in review header
             document.getElementById('resultParticipantDetails').innerText = `Peserta: ${participantProfile.name} | Asal: ${participantProfile.school}`;
             document.getElementById('resultBadgeParticipant').innerText = participantProfile.school;
 
@@ -1609,16 +1785,24 @@
         function filterReview(type) {
             currentReviewFilter = type;
             document.querySelectorAll('.review-filter-btn').forEach(b => {
-                b.classList.remove('bg-slate-200', 'font-bold', 'border', 'border-slate-300');
+                b.className = 'review-filter-btn px-3 py-1.5 rounded-xl bg-white hover:bg-slate-200 font-semibold text-slate-700 border border-slate-300';
             });
 
-            if (type === 'all') document.getElementById('filterAll').classList.add('bg-slate-200', 'font-bold');
-            if (type === 'wrong') document.getElementById('filterWrong').classList.add('bg-slate-200', 'font-bold');
-            if (type === 'correct') document.getElementById('filterCorrect').classList.add('bg-slate-200', 'font-bold');
+            if (type === 'all') {
+                const el = document.getElementById('filterAll');
+                el.className = 'review-filter-btn px-3 py-1.5 rounded-xl bg-brand-600 text-white font-bold';
+            } else if (type === 'wrong') {
+                const el = document.getElementById('filterWrong');
+                el.className = 'review-filter-btn px-3 py-1.5 rounded-xl bg-rose-600 text-white font-bold';
+            } else if (type === 'correct') {
+                const el = document.getElementById('filterCorrect');
+                el.className = 'review-filter-btn px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold';
+            }
 
             renderReviewList(type);
         }
 
+        // Render Comprehensive Pedagogical Review List
         function renderReviewList(filter) {
             const container = document.getElementById('reviewItemsContainer');
             container.innerHTML = '';
@@ -1632,45 +1816,73 @@
                 if (filter === 'wrong' && (isCorrect || !isAnswered)) return;
 
                 const card = document.createElement('div');
-                card.className = `p-5 rounded-xl border text-sm space-y-3 ${
+                card.className = `p-6 rounded-2xl border text-sm space-y-4 bg-white shadow-sm ${
                     isCorrect 
-                        ? 'border-emerald-200 bg-emerald-50/30' 
-                        : (isAnswered ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-slate-50')
+                        ? 'border-emerald-200 ring-1 ring-emerald-300' 
+                        : (isAnswered ? 'border-rose-200 ring-1 ring-rose-300' : 'border-slate-300')
                 }`;
 
                 let statusBadge = isCorrect 
-                    ? `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded font-bold flex items-center gap-1"><i class="ph-bold ph-check"></i> BENAR</span>`
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1"><i class="ph-bold ph-check"></i> BENAR</span>`
                     : (isAnswered 
-                        ? `<span class="bg-rose-100 text-rose-800 text-xs px-2.5 py-1 rounded font-bold flex items-center gap-1"><i class="ph-bold ph-x"></i> SALAH</span>`
-                        : `<span class="bg-slate-200 text-slate-700 text-xs px-2.5 py-1 rounded font-bold">KOSONG</span>`);
+                        ? `<span class="bg-rose-100 text-rose-800 text-xs px-3 py-1 rounded-full font-bold flex items-center gap-1"><i class="ph-bold ph-x"></i> SALAH</span>`
+                        : `<span class="bg-slate-200 text-slate-700 text-xs px-3 py-1 rounded-full font-bold">TIDAK DIJAWAB</span>`);
 
+                // Format explanation with pedagogical blocks
                 card.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <span class="font-extrabold text-slate-800">No. ${q.id}</span>
-                            <span class="text-xs bg-slate-200 px-2 py-0.5 rounded text-slate-600 font-semibold">${q.topic}</span>
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="font-extrabold text-base text-brand-900">SOAL NO. ${q.id}</span>
+                            <span class="text-xs bg-slate-100 px-2.5 py-0.5 rounded-md text-slate-600 font-semibold">${q.topic}</span>
+                            <span class="text-[11px] px-2 py-0.5 rounded font-bold ${
+                                q.level === 'MUDAH' ? 'bg-emerald-50 text-emerald-700' : (q.level === 'SEDANG' ? 'bg-blue-50 text-blue-700' : 'bg-rose-50 text-rose-700')
+                            }">${q.level}</span>
                         </div>
                         ${statusBadge}
                     </div>
 
-                    <div class="text-slate-800 font-medium whitespace-pre-line leading-relaxed">
+                    <div class="text-slate-800 font-medium whitespace-pre-line leading-relaxed text-sm md:text-base">
                         ${q.question}
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div class="p-2.5 rounded-lg border ${isCorrect ? 'bg-emerald-100 border-emerald-300 text-emerald-900 font-semibold' : 'bg-slate-100 border-slate-200'}">
-                            <strong>Jawaban Anda:</strong> ${userChoice ? userChoice + '. ' + getOptionText(q, userChoice) : '<em class="text-slate-400">Tidak menjawab</em>'}
+                        <div class="p-3 rounded-xl border ${isCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold' : (isAnswered ? 'bg-rose-50 border-rose-300 text-rose-950 font-semibold' : 'bg-slate-50 border-slate-200 text-slate-600')}">
+                            <span class="text-slate-500 block text-[11px] uppercase tracking-wider mb-0.5">Jawaban Anda:</span>
+                            ${userChoice ? userChoice + '. ' + getOptionText(q, userChoice) : '<em class="text-slate-400">Tidak menjawab</em>'}
                         </div>
-                        <div class="p-2.5 rounded-lg border bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold">
-                            <strong>Kunci Jawaban:</strong> ${q.key}. ${getOptionText(q, q.key)}
+                        <div class="p-3 rounded-xl border bg-emerald-50 border-emerald-300 text-emerald-950 font-semibold">
+                            <span class="text-emerald-700 block text-[11px] uppercase tracking-wider mb-0.5">Kunci Jawaban Resmi:</span>
+                            ${q.key}. ${getOptionText(q, q.key)}
                         </div>
                     </div>
 
-                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-700 space-y-1">
-                        <div class="font-bold text-brand-900 flex items-center gap-1">
-                            <i class="ph-bold ph-lightbulb"></i> Pembahasan:
+                    <!-- DEEP PEDAGOGICAL EXPLANATION BOX -->
+                    <div class="mt-3 p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs leading-relaxed">
+                        
+                        <!-- 1. Concept -->
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-brand-900 flex-shrink-0 flex items-center gap-1 bg-brand-100 px-2 py-0.5 rounded">
+                                <i class="ph-bold ph-bookmarks"></i> Konsep Utama:
+                            </span>
+                            <span class="font-semibold text-slate-800 mt-0.5">${q.concept || q.topic}</span>
                         </div>
-                        <p class="leading-relaxed text-slate-600">${q.explanation}</p>
+
+                        <!-- 2. Grammatical & Sentence Analysis -->
+                        <div class="space-y-1">
+                            <div class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="ph-bold ph-file-text text-brand-600"></i> Analisis Kalimat & Aturan Tata Bahasa:
+                            </div>
+                            <p class="text-slate-600 pl-4 border-l-2 border-brand-500 bg-white p-2.5 rounded-r-xl">${q.analysis}</p>
+                        </div>
+
+                        <!-- 3. Elimination of Wrong Options -->
+                        <div class="space-y-1">
+                            <div class="font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="ph-bold ph-x-circle text-rose-500"></i> Mengapa Opsi Lain Kurang Tepat:
+                            </div>
+                            <div class="text-slate-600 pl-4 border-l-2 border-rose-300 bg-white p-2.5 rounded-r-xl whitespace-pre-line">${q.elimination}</div>
+                        </div>
+
                     </div>
                 `;
 
@@ -1678,7 +1890,7 @@
             });
 
             if (container.children.length === 0) {
-                container.innerHTML = `<p class="text-center py-8 text-slate-400 text-xs italic">Tidak ada butir soal dalam kategori filter ini.</p>`;
+                container.innerHTML = `<p class="text-center py-10 text-slate-400 text-xs italic">Tidak ada butir soal dalam filter ini.</p>`;
             }
         }
 
