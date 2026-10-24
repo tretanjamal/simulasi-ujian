@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Simulasi Kompetisi Bahasa Inggris SMP - POSI Smart Champion</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- LOGIN & WELCOME PORTAL (ACTIVE BY DEFAULT) -->
+    <div id="loginPortal" class="fixed inset-0 z-50 bg-gradient-to-br from-brand-900 via-slate-900 to-indigo-950 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-slate-200/40 overflow-hidden my-auto animate-scale-up">
+            <!-- PORTAL HEADER -->
+            <div class="bg-gradient-to-r from-brand-900 to-brand-800 p-6 md:p-8 text-white relative">
+                <div class="flex items-center space-x-3.5 mb-2">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-white text-2xl shadow-lg ring-2 ring-white/20">
+                        <i class="ph-bold ph-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <span class="inline-block text-[11px] font-bold tracking-widest text-cyan-300 uppercase bg-cyan-950/60 px-2.5 py-0.5 rounded border border-cyan-500/30">CBT PORTAL RESMI</span>
+                        <h2 class="text-lg md:text-xl font-extrabold tracking-tight">SIMULASI KOMPETISI BAHASA INGGRIS</h2>
+                    </div>
+                </div>
+                <p class="text-xs md:text-sm text-slate-300">Tingkat SMP/MTs • POSI Smart Champion • Naskah Lengkap 75 Soal</p>
+                <div class="absolute top-4 right-4 text-white/10 text-7xl font-black select-none pointer-events-none">
+                    CBT
+                </div>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleStartExam(event)" class="p-6 md:p-8 space-y-4">
+                <!-- ERROR NOTIFICATION -->
+                <div id="loginAlert" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-700 text-xs md:text-sm flex items-start gap-2.5 animate-bounce-short">
+                    <i class="ph-bold ph-warning-circle text-lg flex-shrink-0 mt-0.5 text-rose-600"></i>
+                    <span id="loginAlertText">Token ujian tidak valid atau salah! Silakan hubungi proktor / pengawas ujian Anda.</span>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Nama Lengkap Peserta <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <i class="ph-bold ph-user absolute left-3.5 top-3.5 text-slate-400 text-lg"></i>
+                        <input type="text" id="participantName" required placeholder="Masukkan Nama Lengkap Anda" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition font-medium">
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Asal Sekolah / Instansi <span class="text-rose-500">*</span></label>
+                    <div class="relative">
+                        <i class="ph-bold ph-buildings absolute left-3.5 top-3.5 text-slate-400 text-lg"></i>
+                        <input type="text" id="participantSchool" required placeholder="Masukkan Asal Sekolah / Madrasah" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition font-medium">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Token Ujian <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <i class="ph-bold ph-key absolute left-3.5 top-3.5 text-slate-400 text-lg"></i>
+                            <input type="password" id="examToken" required autocomplete="off" placeholder="••••••••" class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-mono tracking-wider focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition font-bold">
+                            <button type="button" onclick="toggleTokenVisibility()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 focus:outline-none" title="Lihat/Sembunyikan Token">
+                                <i id="tokenEyeIcon" class="ph-bold ph-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Alokasi Waktu</label>
+                        <div class="relative">
+                            <i class="ph-bold ph-clock absolute left-3.5 top-3.5 text-slate-400 text-lg"></i>
+                            <select id="examDurationSelect" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition font-medium">
+                                <option value="90">90 Menit (Standar Kompetisi)</option>
+                                <option value="60">60 Menit (Simulasi Cepat)</option>
+                                <option value="120">120 Menit (Latihan Santai)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTEGRITY STATEMENT -->
+                <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl">
+                    <label class="flex items-start gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="integrityAgreement" required class="mt-0.5 w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-amber-400">
+                        <span class="text-xs text-amber-900 leading-relaxed font-medium">
+                            Saya berjanji mengerjakan simulasi soal ini secara mandiri, jujur, serta tertib sesuai prosedur ujian CBT resmi.
+                        </span>
+                    </label>
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 active:scale-[0.99] text-white font-bold text-sm tracking-wider uppercase shadow-xl hover:shadow-cyan-500/20 transition flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-play-circle text-lg"></i>
+                        <span>Mulai Kerjakan Ujian</span>
+                    </button>
+                    <p class="text-[11px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-lock-key text-slate-400"></i>
+                        <span>Token didapatkan dari pengawas ruang / panitia ujian</span>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-brand-900 text-white px-4 md:px-8 py-3 flex items-center justify-between shadow-md z-20 flex-shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-white shadow-lg text-lg">
+                <i class="ph-bold ph-graduation-cap"></i>
+            </div>
+            <div>
+                <h1 class="text-sm md:text-base font-bold leading-tight tracking-wide flex items-center gap-2">
+                    SIMULASI KOMPETISI BAHASA INGGRIS SMP
+                    <span class="hidden sm:inline-block text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-2 py-0.5 rounded font-mono">75 SOAL</span>
+                </h1>
+                <div class="flex items-center gap-2 text-xs text-slate-300">
+                    <span id="navParticipantName" class="font-bold text-cyan-300 truncate max-w-[120px] sm:max-w-[180px]">Nama Peserta</span>
+                    <span>•</span>
+                    <span id="navParticipantSchool" class="text-slate-300 truncate max-w-[120px] sm:max-w-[180px]">Asal Sekolah</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <!-- TIMER -->
+            <div id="timerContainer" class="flex items-center bg-slate-800/90 border border-slate-700/60 rounded-xl px-3 py-1.5 shadow-inner">
+                <i class="ph-fill ph-timer text-cyan-400 mr-2 text-xl animate-pulse"></i>
+                <div class="flex flex-col text-right">
+                    <span class="text-[9px] text-slate-400 uppercase font-semibold leading-none">Sisa Waktu</span>
+                    <span id="timerDisplay" class="font-mono text-sm md:text-base font-bold text-white tracking-wider">90:00</span>
+                </div>
+            </div>
+
+            <!-- FULLSCREEN TOGGLE -->
+            <button id="fullscreenBtn" onclick="toggleFullScreen()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 transition text-slate-200 border border-slate-700 text-lg flex items-center justify-center" title="Layar Penuh (Fullscreen)">
+                <i id="fsIcon" class="ph-bold ph-arrows-out"></i>
+            </button>
+
+            <!-- LOGOUT / KELUAR KE BERANDA -->
+            <button onclick="promptLogoutPortal()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-rose-900/60 text-slate-300 hover:text-rose-200 border border-slate-700 text-lg flex items-center justify-center transition" title="Keluar / Ganti Akun">
+                <i class="ph-bold ph-sign-out"></i>
+            </button>
+
+            <!-- FINISH BUTTON (DIRECT ACCESS) -->
+            <button id="btnFinishTop" onclick="promptFinishExam()" class="hidden md:flex items-center gap-1.5 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white text-xs md:text-sm font-semibold px-4 py-2 rounded-xl shadow-lg transition">
+                <i class="ph-bold ph-check-circle"></i>
+                <span>Kumpulkan</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN EXAM WORKSPACE -->
+    <main id="examWorkspace" class="flex-1 flex overflow-hidden relative">
+        
+        <!-- LEFT AREA: QUESTION & READING PASSAGE -->
+        <section class="flex-1 flex flex-col h-full overflow-hidden bg-white">
+            
+            <!-- QUESTION HEADER (TOPIC & BADGES) -->
+            <div class="border-b border-slate-200 px-6 py-3.5 bg-slate-50 flex items-center justify-between flex-shrink-0">
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-brand-900 bg-brand-100 px-3 py-1 rounded-full uppercase tracking-wider" id="questionNumberBadge">
+                        SOAL NO. 1
+                    </span>
+                    <span class="text-xs font-semibold text-slate-600 bg-slate-200/80 px-2.5 py-1 rounded-md" id="questionCategory">
+                        NOUN
+                    </span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-md" id="questionDifficulty">
+                        MUDAH
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="inline-flex items-center cursor-pointer select-none text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-lg transition">
+                        <input type="checkbox" id="flagCheckbox" onchange="toggleFlag()" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 border-amber-400 mr-2">
+                        <span>Ragu-ragu</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SCROLLABLE QUESTION CONTENT -->
+            <div class="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar space-y-6" id="questionContentArea">
+                
+                <!-- PASSAGE CONTAINER (if question belongs to reading passage) -->
+                <div id="passageContainer" class="hidden border-l-4 border-brand-600 bg-brand-50/60 p-5 rounded-r-xl border border-slate-200">
+                    <div class="flex items-center gap-2 text-brand-900 font-bold text-sm uppercase mb-2">
+                        <i class="ph-bold ph-book-open-text text-base"></i>
+                        <span id="passageTitle">Reading Passage</span>
+                    </div>
+                    <div id="passageText" class="text-slate-700 text-sm md:text-base leading-relaxed whitespace-pre-line italic font-serif"></div>
+                </div>
+
+                <!-- IMAGE CONTAINER (if question has picture, e.g. Q32) -->
+                <div id="imageContainer" class="hidden flex justify-center py-2">
+                    <div class="border-2 border-slate-200 p-2 rounded-xl bg-slate-50 max-w-sm shadow-sm text-center">
+                        <img id="questionImage" src="" alt="Question Illustration" class="rounded-lg max-h-56 mx-auto object-contain">
+                        <p class="text-xs text-slate-400 mt-1 italic">Perhatikan gambar untuk menjawab soal</p>
+                    </div>
+                </div>
+
+                <!-- QUESTION TEXT -->
+                <div class="text-base md:text-lg text-slate-800 font-medium leading-relaxed tracking-normal" id="questionText">
+                    Loading question...
+                </div>
+
+                <!-- OPTIONS LIST -->
+                <div class="space-y-3 pt-2" id="optionsContainer">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- BOTTOM CONTROLLER BAR -->
+            <div class="border-t border-slate-200 p-4 bg-slate-50 flex items-center justify-between flex-shrink-0">
+                <button id="prevBtn" onclick="navigateQuestion(-1)" class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-slate-700 font-semibold text-sm transition shadow-sm">
+                    <i class="ph-bold ph-caret-left"></i>
+                    <span>Sebelumnya</span>
+                </button>
+
+                <!-- Responsive Drawer Trigger for Mobile Number Grid -->
+                <button onclick="toggleMobileSidebar()" class="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-200 text-slate-700 font-semibold text-sm">
+                    <i class="ph-bold ph-squares-four text-base"></i>
+                    <span id="mobileGridStatus">No. 1 / 75</span>
+                </button>
+
+                <div class="flex items-center gap-3">
+                    <button id="nextBtn" onclick="navigateQuestion(1)" class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-semibold text-sm transition shadow-md">
+                        <span>Selanjutnya</span>
+                        <i class="ph-bold ph-caret-right"></i>
+                    </button>
+                    <button id="submitExamBtn" onclick="promptFinishExam()" class="hidden flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold text-sm transition shadow-md">
+                        <i class="ph-bold ph-check"></i>
+                        <span>Selesai & Kumpulkan</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT AREA: QUESTION NUMBERS GRID (SIDEBAR) -->
+        <aside id="sidebarGrid" class="fixed inset-y-0 right-0 z-30 lg:static w-80 md:w-88 bg-white border-l border-slate-200 flex flex-col h-full transform translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-2xl lg:shadow-none">
+            
+            <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Navigasi Soal</h3>
+                    <p class="text-xs text-slate-500">Klik nomor untuk berpindah soal</p>
+                </div>
+                <button onclick="toggleMobileSidebar()" class="lg:hidden p-1.5 rounded-lg text-slate-500 hover:bg-slate-200">
+                    <i class="ph-bold ph-x text-lg"></i>
+                </button>
+            </div>
+
+            <!-- LEGEND -->
+            <div class="px-4 py-3 bg-slate-100 border-b border-slate-200 grid grid-cols-3 gap-2 text-[11px] text-slate-600 font-medium">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block shadow-sm"></span>
+                    <span>Dijawab (<span id="countAnswered">0</span>)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3.5 h-3.5 rounded bg-amber-400 inline-block shadow-sm"></span>
+                    <span>Ragu (<span id="countFlagged">0</span>)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3.5 h-3.5 rounded bg-slate-200 border border-slate-300 inline-block"></span>
+                    <span>Kosong (<span id="countUnanswered">75</span>)</span>
+                </div>
+            </div>
+
+            <!-- BUTTONS GRID -->
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div id="questionGridContainer" class="grid grid-cols-5 gap-2">
+                    <!-- Populated 1 to 75 dynamically -->
+                </div>
+            </div>
+
+            <!-- QUICK SUMMARY STATS -->
+            <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col gap-2">
+                <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div id="progressBar" class="bg-brand-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-slate-500">
+                    <span>Kemajuan Pengerjaan</span>
+                    <span id="progressText" class="font-semibold text-slate-700">0%</span>
+                </div>
+                <button onclick="promptFinishExam()" class="mt-2 w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-900 active:scale-98 text-white font-bold text-xs uppercase tracking-wider transition">
+                    Kumpulkan Ujian
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- RESULT & REVIEW MODAL/PAGE -->
+    <div id="resultModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scale-up">
+            
+            <!-- MODAL HEADER -->
+            <div class="bg-gradient-to-r from-brand-900 via-brand-800 to-indigo-900 text-white p-6 md:p-8 flex items-center justify-between flex-shrink-0">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs uppercase tracking-widest text-cyan-300 font-bold">Hasil Simulasi Resmi</span>
+                        <span id="resultBadgeParticipant" class="text-xs bg-white/20 text-white px-2 py-0.5 rounded font-medium">Peserta</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Skor & Pembahasan Ujian</h2>
+                    <p class="text-xs md:text-sm text-slate-300" id="resultParticipantDetails">Nama: - | Sekolah: -</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-3xl md:text-5xl font-black text-cyan-300 tracking-tight" id="scoreDisplay">0</div>
+                    <span class="text-xs text-slate-300">Skala 100</span>
+                </div>
+            </div>
+
+            <!-- STATS CARDS -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-6 bg-slate-50 border-b border-slate-200 flex-shrink-0">
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Benar</div>
+                    <div id="statCorrect" class="text-2xl font-bold text-emerald-600">0</div>
+                    <div class="text-[10px] text-emerald-500 font-medium">+4 Poin/Soal</div>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Salah</div>
+                    <div id="statWrong" class="text-2xl font-bold text-rose-600">0</div>
+                    <div class="text-[10px] text-rose-500 font-medium">Jawaban Kurang Tepat</div>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Kosong</div>
+                    <div id="statEmpty" class="text-2xl font-bold text-slate-500">0</div>
+                    <div class="text-[10px] text-slate-400 font-medium">Tidak Dijawab</div>
+                </div>
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 text-center shadow-sm">
+                    <div class="text-xs font-semibold text-slate-500 mb-0.5">Akurasi</div>
+                    <div id="statAccuracy" class="text-2xl font-bold text-brand-600">0%</div>
+                    <div class="text-[10px] text-brand-500 font-medium">Tingkat Ketepatan</div>
+                </div>
+            </div>
+
+            <!-- REVIEW LIST & FILTER -->
+            <div class="p-4 md:p-6 bg-white flex-1 overflow-y-auto custom-scrollbar space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-base md:text-lg flex items-center gap-2">
+                        <i class="ph-bold ph-list-magnifying-glass text-brand-600"></i>
+                        Review 75 Soal & Pembahasan
+                    </h3>
+                    <div class="flex gap-1.5 text-xs">
+                        <button onclick="filterReview('all')" class="review-filter-btn active-filter px-3 py-1 rounded-lg bg-slate-200 font-medium" id="filterAll">Semua</button>
+                        <button onclick="filterReview('wrong')" class="review-filter-btn px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-rose-600" id="filterWrong">Salah</button>
+                        <button onclick="filterReview('correct')" class="review-filter-btn px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium text-emerald-600" id="filterCorrect">Benar</button>
+                    </div>
+                </div>
+
+                <div id="reviewItemsContainer" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- MODAL FOOTER -->
+            <div class="p-4 bg-slate-100 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+                <div class="flex gap-2">
+                    <button onclick="restartExam()" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition flex items-center gap-2 shadow-sm">
+                        <i class="ph-bold ph-arrows-counter-clockwise"></i>
+                        <span>Ulangi Ujian</span>
+                    </button>
+                    <button onclick="logoutToPortal()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition flex items-center gap-1.5">
+                        <i class="ph-bold ph-sign-out"></i>
+                        <span>Ganti Peserta</span>
+                    </button>
+                </div>
+                <button onclick="closeResultModal()" class="px-5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-sm transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION PROMPT MODAL -->
+    <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 animate-scale-up">
+            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mx-auto">
+                <i class="ph-bold ph-warning-circle"></i>
+            </div>
+            <div class="text-center space-y-1">
+                <h3 class="text-lg font-bold text-slate-800">Kumpulkan Jawaban Sekarang?</h3>
+                <p id="confirmModalSummary" class="text-xs text-slate-500">Anda telah menjawab 0 dari 75 soal.</p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-1">
+                <div class="flex justify-between">
+                    <span>Soal Terjawab:</span>
+                    <strong id="confirmAnsweredCount" class="text-emerald-600">0</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span>Masih Ragu-ragu:</span>
+                    <strong id="confirmFlaggedCount" class="text-amber-600">0</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span>Belum Dijawab:</span>
+                    <strong id="confirmEmptyCount" class="text-rose-600">75</strong>
+                </div>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold text-sm transition">
+                    Lanjutkan Ujian
+                </button>
+                <button onclick="finalizeExam()" class="flex-1 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm transition shadow-md">
+                    Ya, Kumpulkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & COMPLETE 75 QUESTIONS DATA -->
+    <script>
+        // Reading Passages Dictionary
+        const passages = {
+            jenna: {
+                title: "The following passage is for questions 8 - 10",
+                text: `Jenna was a typical middle school girl with dreams of becoming a K-pop idol. She loved singing and dancing in her room after school, inspired by groups like BTS and BLACKPINK. To chase her dreams, she decided to join a global audition for a girl group. Jenna was aware of the challenges but was determined to put in the necessary work. She practiced daily and even took a local dance class to improve her skills. She submitted a video of her singing and dancing for the audition, feeling both excited and nervous as she recorded it multiple times.`
+            },
+            liam: {
+                title: "The following passage is for questions 24 - 26",
+                text: `Liam is a soldier dedicated to protecting his country's borders, playing a crucial role in ensuring safety and security. Soldiers like him need bravery, discipline, and a strong sense of duty. His day starts early with a quick breakfast, followed by physical training and practicing real-life scenarios to prepare for various situations. Liam's job includes surveillance, where soldiers monitor borders for unauthorized crossings using advanced technology like drones and cameras. This helps prevent illegal activities and maintain national security. Additionally, he and his team engage in community outreach programs to build relationships with locals and reduce fears about the military.`
+            },
+            vanesha: {
+                title: "The following passage is for questions 63 - 65",
+                text: `Vanesha and his college friends volunteered to clean a river. By participating in the cleanup, Vanesha and his friends demonstrated their commitment to the environment. Such activities not only remove litter but also educate people about pollution's dangers, especially to aquatic life. On cleanup day, they gathered with gloves and trash bags, following safety guidelines while enjoying each other's company. They collected litter like plastic bottles and discussed the importance of a clean habitat, making the experience fun and educational. In summary, Vanesha's volunteering experience illustrates how young individuals can contribute positively to society and the environment.`
+            },
+            jackie: {
+                title: "The following passage is for questions 72 - 74",
+                text: `Jackie felt abdominal pain that began as a mild (72) ... and worsened throughout the day. She experienced nausea and difficulty eating, which led her to suspect it could be appendicitis when the pain (73) ... to her lower right abdomen. At the doctor's clinic, she underwent a physical exam, and the doctor ordered imaging tests to confirm the diagnosis. The tests showed Jackie had appendicitis, and she was recommended to have an appendectomy to prevent (74) ... complications.`
+            }
+        };
+
+        // Complete 75 Questions Dataset from POSI Bahasa Inggris SMP
+        const questionsData = [
+            {
+                id: 1,
+                topic: "NOUN",
+                level: "MUDAH",
+                question: "The traveling... to domestic cities rises greatly.",
+                options: ["A. costly", "B. costed", "C. costs", "D. cost"],
+                key: "D",
+                explanation: "Subjek utama kalimat di atas haruslah tunggal karena menggunakan kata kerja 'rises' (sesuai aturan simple present tense), sehingga D (cost) adalah jawaban yang tepat."
+            },
+            {
+                id: 2,
+                topic: "VERB",
+                level: "MUDAH",
+                question: "We must not ... stray animals.",
+                options: ["A. torturing", "B. tortures", "C. torture", "D. tortured"],
+                key: "C",
+                explanation: "Adanya modal (must not) mengharuskan penggunaan kata kerja bentuk pertama (V1) yaitu 'torture', sehingga C adalah jawaban yang tepat."
+            },
+            {
+                id: 3,
+                topic: "ADJECTIVE",
+                level: "MUDAH",
+                question: "The glass is quite ..., so please be careful.",
+                options: ["A. solid", "B. fragile", "C. firm", "D. hard"],
+                key: "B",
+                explanation: "Adanya instruksi 'be careful' (hati-hati) memberi pemahaman bahwa kata sifat yang sesuai adalah 'fragile' (rapuh/mudah pecah), sehingga B tepat."
+            },
+            {
+                id: 4,
+                topic: "ADVERB",
+                level: "MUDAH",
+                question: "They dance ... like a swan in the lake.",
+                options: ["A. elegantly", "B. elegance", "C. eleganting", "D. eleganted"],
+                key: "A",
+                explanation: "Kalimat di atas membutuhkan keterangan cara (adverb of manner) dengan akhiran -ly ('elegantly') untuk menerangkan kata kerja dance."
+            },
+            {
+                id: 5,
+                topic: "ARTICLE",
+                level: "MUDAH",
+                question: "She becomes an ... after graduating.",
+                options: ["A. entrepreneur", "B. hacker", "C. sociopreneur", "D. personal trainer"],
+                key: "A",
+                explanation: "Artikel 'an' mengharuskan penggunaan kata benda yang diawali bunyi vokal. 'entrepreneur' diawali dengan bunyi vokal e."
+            },
+            {
+                id: 6,
+                topic: "PRONOUN",
+                level: "MUDAH",
+                question: "We need to verify ... account.",
+                options: ["A. we", "B. us", "C. our", "D. ourselves"],
+                key: "C",
+                explanation: "Kalimat membutuhkan kata ganti kepemilikan (possessive adjective) yang sesuai dengan subjek we, yaitu 'our'."
+            },
+            {
+                id: 7,
+                topic: "PREPOSITION",
+                level: "MUDAH",
+                question: "The first meeting will be ... the top level of this building.",
+                options: ["A. in", "B. at", "C. to", "D. on"],
+                key: "D",
+                explanation: "Preposisi yang tepat untuk lokasi yang menunjukkan lantai atau level bangunan bertingkat adalah 'on'."
+            },
+            {
+                id: 8,
+                passage: "jenna",
+                topic: "MAIN IDEA",
+                level: "MUDAH",
+                question: "What is the main idea of the passage above?",
+                options: ["A. Jenna's aspiration to be a superstar", "B. Jenna's professional dance career", "C. Jenna's challenge to be famous", "D. Jenna's hesitation in her goals"],
+                key: "A",
+                explanation: "Jawaban ada di frasa 'dreams of becoming' di baris pertama paragraf, di mana frasa ini bersinonim makna dengan kata 'aspiration'."
+            },
+            {
+                id: 9,
+                passage: "jenna",
+                topic: "STATED DETAIL",
+                level: "MUDAH",
+                question: "What did Jenna do to realize her dream?",
+                options: ["A. She enrolled in a talent casting", "B. She signed an exclusive contract", "C. She rehearsed on professional stage", "D. She imitated her idol's image"],
+                key: "A",
+                explanation: "Pada baris ketiga disebutkan 'she decided to join a global audition for a girl group' yang bersinonim makna dengan kata 'enrolled in a talent casting'."
+            },
+            {
+                id: 10,
+                passage: "jenna",
+                topic: "REFERENCE",
+                level: "MUDAH",
+                question: "What does the word 'it' in the last paragraph refer to?",
+                options: ["A. singing", "B. performance", "C. video", "D. class"],
+                key: "C",
+                explanation: "Pada kalimat 'She submitted a video of her singing and dancing for the audition, feeling both excited and nervous as she recorded it multiple times', kata 'it' mengacu pada 'video'."
+            },
+            {
+                id: 11,
+                topic: "CONJUNCTION",
+                level: "MUDAH",
+                question: "I want to join the event, ... I am afraid for my tight schedule.",
+                options: ["A. but", "B. and", "C. so", "D. for"],
+                key: "A",
+                explanation: "Hubungan kedua klausa menunjukkan pertentangan/kontras, sehingga kata hubung yang tepat adalah 'but'."
+            },
+            {
+                id: 12,
+                topic: "WH QUESTIONS",
+                level: "MUDAH",
+                question: "... will you stay? I know some good accommodations.",
+                options: ["A. When", "B. Where", "C. Why", "D. Who"],
+                key: "B",
+                explanation: "Kata 'accommodations' berkaitan dengan tempat penginapan, sehingga kata tanya yang sesuai adalah 'Where'."
+            },
+            {
+                id: 13,
+                topic: "PRESENT PASSIVE VOICE",
+                level: "MUDAH",
+                question: "These books are usually ... by kindergarten students.",
+                options: ["A. reads", "B. reading", "C. read", "D. readed"],
+                key: "C",
+                explanation: "Struktur kalimat passive present adalah S + are + V3. Bentuk V3 dari read adalah tetap 'read' (dilafalkan /red/)."
+            },
+            {
+                id: 14,
+                topic: "PARALLEL STRUCTURE",
+                level: "MUDAH",
+                question: "My daughter wants a small, .... and portable bag.",
+                options: ["A. colourful", "B. colouring", "C. colour", "D. colours"],
+                key: "A",
+                explanation: "Urutan kesetaraan (parallel structure) menggunakan kata sifat ('small', 'portable'), sehingga kata sifat yang tepat adalah 'colourful'."
+            },
+            {
+                id: 15,
+                topic: "OCCUPATIONS",
+                level: "MUDAH",
+                question: "My father is a fish ... . He sells tuna, salmon and cod.",
+                options: ["A. slaughter", "B. merchant", "C. farmer", "D. whisperer"],
+                key: "B",
+                explanation: "Kata kunci 'sells' (menjual) mengarah kepada profesi 'merchant' (penjual / pedagang ikan)."
+            },
+            {
+                id: 16,
+                topic: "SIMPLE PRESENT",
+                level: "SEDANG",
+                question: "Students of class A usually... before they begin their academic work.",
+                options: ["A. study", "B. studying", "C. studies", "D. studied"],
+                key: "A",
+                explanation: "Kalimat menggunakan Simple Present Tense (ada kata 'usually') dengan subjek jamak 'Students', sehingga menggunakan kata kerja dasar V1 'study'."
+            },
+            {
+                id: 17,
+                topic: "SIMPLE PAST",
+                level: "SEDANG",
+                question: "Last week, we ... watch the movie until the end.",
+                options: ["A. doesn't", "B. don't", "C. didn't", "D. hadn't"],
+                key: "C",
+                explanation: "Keterangan waktu lampau 'Last week' memerlukan bentuk negatif simple past yaitu S + didn't + V1."
+            },
+            {
+                id: 18,
+                topic: "SIMPLE FUTURE",
+                level: "SEDANG",
+                question: "According to schedule, they ... us after lunch.",
+                options: ["A. were going to visit", "B. are going to visit", "C. were visiting", "D. will visit"],
+                key: "B",
+                explanation: "Frasa 'According to schedule' menunjukkan rencana yang sudah terjadwal (planned future), sehingga bentuk 'are going to visit' adalah pilihan paling tepat."
+            },
+            {
+                id: 19,
+                topic: "PRESENT PERFECT",
+                level: "SEDANG",
+                question: "She... in this office since 2010.",
+                options: ["A. works", "B. is working", "C. worked", "D. has worked"],
+                key: "D",
+                explanation: "Keterangan waktu 'since 2010' mengindikasikan tense Present Perfect: S + has/have + V3, maka jawabannya 'has worked'."
+            },
+            {
+                id: 20,
+                topic: "TASTE",
+                level: "SEDANG",
+                question: "This is too ... that I think I will get instant diabetic.",
+                options: ["A. bitter", "B. sweet", "C. salty", "D. sour"],
+                key: "B",
+                explanation: "Penyakit 'diabetic' berkaitan erat dengan asupan gula berlebih sehingga rasa yang dimaksud adalah 'sweet' (manis)."
+            },
+            {
+                id: 21,
+                topic: "TEXTURE",
+                level: "SEDANG",
+                question: "I just love these chips because they are ...",
+                options: ["A. runny", "B. moist", "C. crispy", "D. tender"],
+                key: "C",
+                explanation: "Camilan keripik (chips) memiliki tekstur yang khas yaitu renyah dan garing ('crispy')."
+            },
+            {
+                id: 22,
+                topic: "VOLUME & QUANTIFIER",
+                level: "SEDANG",
+                question: "Please put ... salt on the food. I've got hypertension.",
+                options: ["A. a lot of", "B. a few", "C. some", "D. a little"],
+                key: "D",
+                explanation: "'Salt' merupakan uncountable noun, dan penderita hipertensi harus membatasi asupan garam sehingga takaran yang sangat sedikit adalah 'a little'."
+            },
+            {
+                id: 23,
+                topic: "SIZE",
+                level: "SEDANG",
+                question: "Your handwriting is..., isn't it? I might use magnifying glass to read it.",
+                options: ["A. humongous", "B. gigantic", "C. microscopic", "D. enormous"],
+                key: "C",
+                explanation: "Penggunaan 'magnifying glass' (kaca pembesar) menandakan tulisan tangan tersebut sangat kecil / renik ('microscopic')."
+            },
+            {
+                id: 24,
+                passage: "liam",
+                topic: "MAIN IDEA",
+                level: "SEDANG",
+                question: "What does the passage mainly talk about?",
+                options: ["A. Liam's weakness in his profession", "B. Liam's responsibility in his profession", "C. Liam's clumsiness in his profession", "D. Liam's legality in his profession"],
+                key: "B",
+                explanation: "Teks menjelaskan secara terperinci tugas dan tanggung jawab (responsibility) Liam sebagai prajurit penjaga perbatasan."
+            },
+            {
+                id: 25,
+                passage: "liam",
+                topic: "UNSTATED DETAIL",
+                level: "SEDANG",
+                question: "How does Liam figure out the condition of the area without being noticed?",
+                options: ["A. by using flying device", "B. by disguising himself", "C. by asking a trustworthy person", "D. by predicting carefully"],
+                key: "A",
+                explanation: "Pada teks tertulis tentara menggunakan teknologi canggih seperti drone ('flying device') untuk pengawasan perbatasan."
+            },
+            {
+                id: 26,
+                passage: "liam",
+                topic: "IMPLIED DETAIL",
+                level: "SEDANG",
+                question: "What kind of approach did Liam use to society?",
+                options: ["A. funding activity", "B. constant meeting", "C. community outreach programs", "D. promotional flyers"],
+                key: "C",
+                explanation: "Disebutkan di akhir kalimat: 'engage in community outreach programs to build relationships with locals'."
+            },
+            {
+                id: 27,
+                topic: "PARALLEL STRUCTURE",
+                level: "SEDANG",
+                question: "I have no idea that she loves to dance, ... and to pantomime in theatre.",
+                options: ["A. to sing", "B. singing", "C. sing", "D. sings"],
+                key: "A",
+                explanation: "Pola paralel pada kalimat di atas menggunakan bentuk to-infinitive (to dance, to sing, and to pantomime)."
+            },
+            {
+                id: 28,
+                topic: "PRESENT PASSIVE VOICE",
+                level: "SEDANG",
+                question: "Classes in my school often... by janitors.",
+                options: ["A. is cleaning", "B. cleans", "C. are cleaned", "D. is clean"],
+                key: "C",
+                explanation: "Subjek 'Classes' adalah bentuk jamak, sehingga pasif present tenses adalah S + are + V3 ('are cleaned')."
+            },
+            {
+                id: 29,
+                topic: "WH-QUESTIONS",
+                level: "SEDANG",
+                question: "... took my books? I need to find the culprit.",
+                options: ["A. Where", "B. Who", "C. When", "D. Why"],
+                key: "B",
+                explanation: "Kata 'culprit' merujuk kepada pelaku/orang, sehingga kata tanya subjek yang sesuai adalah 'Who'."
+            },
+            {
+                id: 30,
+                topic: "CONJUNCTION",
+                level: "SEDANG",
+                question: "Those people performed well, ... they practiced day and night.",
+                options: ["A. so", "B. for", "C. but", "D. and"],
+                key: "B",
+                explanation: "Hubungan klausa adalah akibat-sebab. Konjungsi koordinatif 'for' memiliki arti 'karena / sebab'."
+            },
+            {
+                id: 31,
+                topic: "IMPERATIVE SENTENCE",
+                level: "SEDANG",
+                question: "Please do not ... as we will announce the best speaker in this speech competition.",
+                options: ["A. come", "B. attend", "C. dismiss", "D. verify"],
+                key: "C",
+                explanation: "Konteks kalimat meminta audiens agar tidak bubar/meninggalkan tempat ('dismiss') sebelum pemenang diumumkan."
+            },
+            {
+                id: 32,
+                topic: "PRESENT CONTINUOUS",
+                level: "SEDANG",
+                hasImage: true,
+                imageUrl: "https://placehold.co/480x280/1e293b/38bdf8?text=Computer+Technician+Repairing+PC+Case",
+                question: "What is the man doing?",
+                options: ["A. He is repairing CPU", "B. He is charging cell-phone", "C. He is tuning the device", "D. He is installing his own roof"],
+                key: "A",
+                explanation: "Ilustrasi menunjukkan teknisi pria yang sedang memperbaiki unit komputer/CPU dengan obeng."
+            },
+            {
+                id: 33,
+                topic: "PAST CONTINUOUS",
+                level: "SEDANG",
+                question: "I fell while ...",
+                options: ["A. I was texting my friend", "B. I texted my friend", "C. I am texting my friend", "D. I text my friend"],
+                key: "A",
+                explanation: "Klausa 'while' dalam konteks lampau menggunakan past continuous (was texting) sebagai latar belakang tindakan yang diinterupsi oleh 'fell'."
+            },
+            {
+                id: 34,
+                topic: "PAST PERFECT",
+                level: "SEDANG",
+                question: "Our team had... the design before the deadline.",
+                options: ["A. finalize", "B. finalizing", "C. finalizes", "D. finalized"],
+                key: "D",
+                explanation: "Bentuk Past Perfect menggunakan rumus S + had + V3 ('finalized')."
+            },
+            {
+                id: 35,
+                topic: "SIMPLE FUTURE",
+                level: "SEDANG",
+                question: "If I'm not mistaken, the group ... at 7 pm.",
+                options: ["A. arrive", "B. will arrive", "C. is going to arrive", "D. is arriving"],
+                key: "B",
+                explanation: "Frasa 'If I'm not mistaken' menunjukkan adanya dugaan/ketidakpastian spontan, sehingga 'will arrive' lebih lazim dan tepat digunakan."
+            },
+            {
+                id: 36,
+                topic: "PREPOSITION",
+                level: "SEDANG",
+                question: "You shouldn't worry... that simple matter too much.",
+                options: ["A. in", "B. for", "C. about", "D. on"],
+                key: "C",
+                explanation: "Pasangan preposisi baku (prepositional phrase) untuk kata kerja worry adalah 'worry about'."
+            },
+            {
+                id: 37,
+                topic: "PRONOUN",
+                level: "SEDANG",
+                question: "The man introduced ... as an extroverted person.",
+                options: ["A. he", "B. himself", "C. his", "D. himselves"],
+                key: "B",
+                explanation: "Subjek pria tunggal 'The man' melakukan tindakan pada dirinya sendiri, maka membutuhkan reflexive pronoun 'himself'."
+            },
+            {
+                id: 38,
+                topic: "ARTICLE",
+                level: "SEDANG",
+                question: "Our university is going to build a ...",
+                options: ["A. extra restroom", "B. unique corridor", "C. outstanding hall", "D. attractive gate"],
+                key: "B",
+                explanation: "Kata 'unique' dilafalkan /juːˈniːk/ (bunyi konsonan 'y'), sehingga menggunakan artikel 'a', bukan 'an'."
+            },
+            {
+                id: 39,
+                topic: "ADVERB",
+                level: "SEDANG",
+                question: "How could he run the program ...? Every section is punctual.",
+                options: ["A. effortlessly", "B. carelessly", "C. mindlessly", "D. uselessly"],
+                key: "A",
+                explanation: "Kalimat bernada positif dan apresiatif terhadap jalannya program yang tepat waktu, maka adverb bernada positif yang cocok adalah 'effortlessly' (tanpa kesulitan)."
+            },
+            {
+                id: 40,
+                topic: "ADJECTIVE",
+                level: "SEDANG",
+                question: "The woman is looking for a ... project for her next investment.",
+                options: ["A. promised", "B. promises", "C. promise", "D. promising"],
+                key: "D",
+                explanation: "Dibutuhkan participle adjective berakhiran -ing ('promising' = berprospek cerah/menjanjikan) untuk menyifati kata benda project."
+            },
+            {
+                id: 41,
+                topic: "VERB",
+                level: "SEDANG",
+                question: "After a lot of consideration, that former champion decided to ... from the competition.",
+                options: ["A. withdrew", "B. withdrawn", "C. withdraw", "D. withdrawing"],
+                key: "C",
+                explanation: "Pola to-infinitive selalu diikuti kata kerja bentuk dasar (V1) yaitu 'withdraw'."
+            },
+            {
+                id: 42,
+                topic: "NOUN & CAPITALIZATION",
+                level: "SEDANG",
+                question: "Have you visited ...? It is amazing!",
+                options: ["A. mount bromo", "B. mount Bromo", "C. Mount Bromo", "D. Mount bromo"],
+                key: "C",
+                explanation: "Nama geografi diri (proper noun) harus diawali huruf kapital pada setiap katanya: 'Mount Bromo'."
+            },
+            {
+                id: 43,
+                topic: "SIZE",
+                level: "SEDANG",
+                question: "I am looking for a dress in ... size for my infant.",
+                options: ["A. sturdy", "B. petite", "C. expansive", "D. immense"],
+                key: "B",
+                explanation: "'Infant' adalah bayi kecil, sehingga ukuran yang mungil/sangat kecil adalah 'petite'."
+            },
+            {
+                id: 44,
+                topic: "TEXTURE",
+                level: "SEDANG",
+                question: "The ... texture of cactus is definitely dangerous.",
+                options: ["A. prickly", "B. squishy", "C. crumbly", "D. malleable"],
+                key: "A",
+                explanation: "Kaktus memiliki tekstur berduri tajam, dalam bahasa Inggris disebut 'prickly'."
+            },
+            {
+                id: 45,
+                topic: "TASTE & TEXTURE",
+                level: "SEDANG",
+                question: "Your French Fries is too ... since you used too much oil.",
+                options: ["A. acrid", "B. bittersweet", "C. greasy", "D. crunchy"],
+                key: "C",
+                explanation: "Makanan yang menggunakan terlalu banyak minyak (oil) akan terasa berminyak pekat atau 'greasy'."
+            },
+            {
+                id: 46,
+                topic: "OCCUPATIONS",
+                level: "SULIT",
+                question: "My late grandfather was a .... He was responsible for hull of the ship.",
+                options: ["A. lumberjack", "B. anchor", "C. steward", "D. boatswain"],
+                key: "D",
+                explanation: "'Boatswain' (bosun) adalah perwira kapal yang bertanggung jawab atas perlengkapan geladak dan perawatan lambung kapal (hull of the ship)."
+            },
+            {
+                id: 47,
+                topic: "SIMPLE PRESENT (WORD ORDER)",
+                level: "SULIT",
+                question: `Arrange the words below into a good sentence!\nuses(1) cooking(2) - my(3) when(4) - seldom(5) - seasoning(6) - mother(7)\n1: uses, 2: cooking, 3: my, 4: when, 5: seldom, 6: seasoning, 7: mother`,
+                options: ["A. 3-7-4-6-1-5-2", "B. 3-1-2-7-6-4-5", "C. 3-7-4-1-2-5-6", "D. 3-7-5-1-6-4-2"],
+                key: "D",
+                explanation: "Susunan yang tepat: 'My mother seldom uses seasoning when cooking' (3-7-5-1-6-4-2)."
+            },
+            {
+                id: 48,
+                topic: "SIMPLE PAST (WORD ORDER)",
+                level: "SULIT",
+                question: `Arrange the words into a good sentence:\nfell(1) - the(2) - evening(3) - my(4) - motorcycle(5) - father(6) - off(7) - yesterday(8) - nearly(9)`,
+                options: ["A. 4-6-9-3-5-2-7-8-1", "B. 4-6-9-1-7-2-5-8-3", "C. 4-6-7-1-9-2-3-8-5", "D. 4-6-8-2-7-1-5-9-3"],
+                key: "B",
+                explanation: "Susunan yang benar: 'My father nearly fell off the motorcycle yesterday evening' (4-6-9-1-7-2-5-8-3)."
+            },
+            {
+                id: 49,
+                topic: "SIMPLE FUTURE (WORD ORDER)",
+                level: "SULIT",
+                question: `Arrange the words into a good sentence:\nwill(1) - month(2) - our(3) - compete(4) - school(5) - finals(6) - in(7) - next(8) - the(9) - team(10) - football(11)`,
+                options: ["A. 3-1-11-10-5-4-7-6-9-8-2", "B. 3-5-11-4-1-10-2-9-6-8-7", "C. 3-5-11-10-1-4-7-9-6-8-2", "D. 3-5-4-10-1-11-7-8-6-9-2"],
+                key: "C",
+                explanation: "Susunan yang benar: 'Our school football team will compete in the finals next month' (3-5-11-10-1-4-7-9-6-8-2)."
+            },
+            {
+                id: 50,
+                topic: "VOLUME & NOUN FORMATION",
+                level: "SEDANG",
+                question: "How can we measure the ... of this bathtub?",
+                options: ["A. deep", "B. deeply", "C. depth", "D. deepen"],
+                key: "C",
+                explanation: "Setelah artikel 'the', diperlukan kata benda (noun). Bentuk noun dari deep adalah 'depth' (kedalaman)."
+            },
+            {
+                id: 51,
+                topic: "PRESENT CONTINUOUS (WORD ORDER)",
+                level: "SULIT",
+                question: `Arrange the words into a good sentence:\nthe house(1) - a(2) - currently(3) - in(4) - is(5) - pipes(6) - plumber(7) - our(8) - water(9) - repairing(10) - [missing tag]`,
+                options: [
+                    "A. 3-8-6-4-11-1-10-7-5-9-2",
+                    "B. 3-8-2-4-5-1-10-7-11-9-6",
+                    "C. 3-8-5-7-11-1-10-4-6-9-2",
+                    "D. 3-8-9-4-10-1-11-7-5-6-2"
+                ],
+                key: "A",
+                explanation: "Sesuai kunci naskah POSI, opsi A adalah kunci resmi untuk pola present continuous 'currently ... in our house water pipes repairing a plumber'."
+            },
+            {
+                id: 52,
+                topic: "PAST CONTINUOUS",
+                level: "SULIT",
+                question: "When ..., he found a wallet.",
+                options: ["A. he is walking on the street", "B. he was walking on the street", "C. he has been walking on the street", "D. he had been walking on the street"],
+                key: "B",
+                explanation: "Pola 'When + past continuous, simple past' digunakan ketika suatu aktivitas sedang berlangsung di masa lampau lalu disela kejadian lain."
+            },
+            {
+                id: 53,
+                topic: "PAST PERFECT",
+                level: "SULIT",
+                question: "By the time she completed her degree, he... a job at international company.",
+                options: ["A. had secured", "B. secures", "C. is securing", "D. has been securing"],
+                key: "A",
+                explanation: "Klausa 'By the time + simple past' berpasangan dengan 'past perfect' (had + V3) untuk menandai peristiwa yang selesai sebelum peristiwa lampau lainnya."
+            },
+            {
+                id: 54,
+                topic: "PRESENT PERFECT CONTINUOUS",
+                level: "SULIT",
+                question: "Has ... since 3 am? Her dinner is still on the table.",
+                options: ["A. she worked", "B. she been working", "C. she been worked", "D. she working"],
+                key: "B",
+                explanation: "Bentuk interogatif Present Perfect Continuous: Has + Subject + been + V-ing? Maka 'she been working' adalah pasangan yang tepat."
+            },
+            {
+                id: 55,
+                topic: "PRESENT PERFECT",
+                level: "SULIT",
+                question: "My sister... her proposal drafts. Her lecturer is reviewing them now.",
+                options: ["A. has written", "B. wrote", "C. is writing", "D. has been writing"],
+                key: "A",
+                explanation: "Draft sudah selesai ditulis sehingga sekarang sedang direview oleh dosen, menunjukkan akibat di masa kini dari aksi yang telah tuntas ('has written')."
+            },
+            {
+                id: 56,
+                topic: "NOUN",
+                level: "SULIT",
+                question: "... becomes the reason why he hasn't finished his thesis.",
+                options: ["A. Initiation", "B. Abruption", "C. Contemplation", "D. Procrastination"],
+                key: "D",
+                explanation: "'Procrastination' bermakna kebiasaan menunda-nunda pekerjaan, sangat cocok dengan konteks belum menyelesaikan skripsi."
+            },
+            {
+                id: 57,
+                topic: "VERB",
+                level: "SULIT",
+                question: "Our teacher tries to ... some dull subjects to be more enjoyable.",
+                options: ["A. pacify", "B. dignify", "C. gamify", "D. liquefy"],
+                key: "C",
+                explanation: "'Gamify' berarti mengemas materi pembelajaran menjadi seperti permainan agar menyenangkan dan tidak membosankan."
+            },
+            {
+                id: 58,
+                topic: "ADJECTIVE",
+                level: "SULIT",
+                question: "My uncle enjoys his ... life in his far-away house in the middle of woods.",
+                options: ["A. fancy", "B. solitary", "C. grumpy", "D. racy"],
+                key: "B",
+                explanation: "Tinggal di rumah yang terpencil di tengah hutan menunjukkan kehidupan yang menyendiri/sunyi ('solitary')."
+            },
+            {
+                id: 59,
+                topic: "ADVERB & PREPOSITION",
+                level: "SULIT",
+                question: "... special occasion, my uncle usually serves best wine to his guests.",
+                options: ["A. In", "B. At", "C. To", "D. On"],
+                key: "D",
+                explanation: "Preposisi waktu baku yang dipasangkan dengan kata occasion/special occasion adalah 'On' ('On special occasions')."
+            },
+            {
+                id: 60,
+                topic: "ARTICLE",
+                level: "SULIT",
+                question: "Can you recommend an ... to learn Mandarin?",
+                options: ["A. hourly course", "B. weekly course", "C. monthly course", "D. yearly course"],
+                key: "A",
+                explanation: "Kata 'hourly' diucapkan dengan huruf h bisu (/ˈaʊərli/), sehingga berbunyi vokal dan harus menggunakan artikel 'an'."
+            },
+            {
+                id: 61,
+                topic: "PREPOSITION",
+                level: "SULIT",
+                question: "The defendant is vindictive... murdering with suspicious motivation.",
+                options: ["A. at", "B. on", "C. to", "D. of"],
+                key: "D",
+                explanation: "Sesuai pembahasan naskah, preposisi yang dilekatkan dengan kata sifat 'vindictive' dalam konteks ini adalah 'of'."
+            },
+            {
+                id: 62,
+                topic: "PRONOUN",
+                level: "SULIT",
+                question: "The committee of private companies will held ... first conference this year in Bali.",
+                options: ["A. their", "B. its", "C. them", "D. it"],
+                key: "B",
+                explanation: "Subjek utama kalimat adalah 'the committee' (benda kolektif tunggal / singular noun), maka possessive pronoun yang tepat adalah 'its'."
+            },
+            {
+                id: 63,
+                passage: "vanesha",
+                topic: "IMPLIED DETAIL",
+                level: "SEDANG",
+                question: "According to the text, how did Vanesha and her friends inspire others?",
+                options: [
+                    "A. Their action emphasized the concern toward nature",
+                    "B. Their action provoked government's lack of attention",
+                    "C. Their action demonstrated the thirst of validation",
+                    "D. Their action stated the mental block in youth generation"
+                ],
+                key: "A",
+                explanation: "Aksi mereka memperlihatkan kepedulian terhadap lingkungan (commitment to the environment = concern toward nature)."
+            },
+            {
+                id: 64,
+                passage: "vanesha",
+                topic: "VOCABULARY IN CONTEXT",
+                level: "SULIT",
+                question: "What does the word 'company' in line 5 mean?",
+                options: ["A. institution", "B. firm", "C. teamwork", "D. business"],
+                key: "C",
+                explanation: "Frasa 'enjoying each other's company' bermakna menikmati kebersamaan / kerjasama dalam kelompok ('teamwork')."
+            },
+            {
+                id: 65,
+                passage: "vanesha",
+                topic: "PURPOSE QUESTION",
+                level: "SULIT",
+                question: "What is the author of the passage trying to tell the readers?",
+                options: [
+                    "A. Young generation still has a lot of learning moment in nature subject",
+                    "B. Young generation might cause insignificant impact to environment",
+                    "C. Young generation should be ashamed of their neglect toward nature",
+                    "D. Young generation may contribute by preserving environment"
+                ],
+                key: "D",
+                explanation: "Penulis menyampaikan bahwa generasi muda dapat berkontribusi positif bagi masyarakat dengan melestarikan lingkungan sekitar."
+            },
+            {
+                id: 66,
+                topic: "COHERENCE & TEXT INSERTION",
+                level: "SULIT",
+                question: `When the blackout started, Eric's house felt strange and quiet. (1). The first thing he noticed was how dark it became after the sunset. Normally, the family would have the lights on, reading books or watching television. (2). Now, they had to rely on candles and flashlights for light. This was fun at first, creating a cozy atmosphere. (3). They could not charge their phones or use the refrigerator to keep their food fresh. Eric's family had to be careful about what they ate, using up items that would spoil quickly. (4).\n\nWhere should the sentence below fit in the passage above?\n"However, as the days passed, it became difficult."`,
+                options: ["A. (3)", "B. (4)", "C. (2)", "D. (1)"],
+                key: "A",
+                explanation: "Kalimat tersebut menjadi jembatan kontras antara suasana awal yang 'fun at first' dengan kesulitan yang muncul setelahnya 'could not charge phones'."
+            },
+            {
+                id: 67,
+                topic: "COHERENCE & TEXT INSERTION",
+                level: "SULIT",
+                question: `(1). Sasha loved to cook, and one of her favourite things to do was to try recipes from her family's old cookbook. (2). This cookbook was filled with traditional dishes that had been passed down through generations. (3). Among these recipes, one dish stood out to Sasha: her grandmother's famous chicken pot pie. (4). Her grandmother used to make it for the family on special occasions. However, every time Sasha tried to make this dish, her efforts seemed to end in disappointment.\n\nWhere should the sentence below fit in the passage above?\n"It was not only delicious, but it also had a comforting story behind it."`,
+                options: ["A. (2)", "B. (4)", "C. (1)", "D. (3)"],
+                key: "B",
+                explanation: "Kalimat ini menjelaskan hidangan pie yang menonjol dan memiliki latar kisah keluarga, sehingga tepat diletakkan pada posisi (4) sebelum penjelasan tentang neneknya."
+            },
+            {
+                id: 68,
+                topic: "COHERENCE & TEXT INSERTION",
+                level: "SULIT",
+                question: `(1) Lucy was a bright student. She had big dreams for her future. (2) It seemed like the perfect start for her career. However, not long after she began working, Lucy faced a serious problem. (3) She lacked discipline. This issue ultimately caused her to lose her job. (4) It was definitely a difficult lesson for her to learn.\n\nWhere should the sentence below fit in the passage above?\n"After graduating from high school, she landed a job at a local café."`,
+                options: ["A. (4)", "B. (1)", "C. (2)", "D. (3)"],
+                key: "C",
+                explanation: "Setelah menyatakan impian masa depannya, ia mendapat pekerjaan di kafe yang menjadi rujukan frasa 'It seemed like the perfect start for her career' di nomor (2)."
+            },
+            {
+                id: 69,
+                topic: "PRESENT PERFECT CONTINUOUS PASSIVE",
+                level: "SULIT",
+                question: "The system in this company... with the latest updates for almost 3 weeks.",
+                options: [
+                    "A. has been updating",
+                    "B. has being been updating",
+                    "C. has been being updated",
+                    "D. has being been updated"
+                ],
+                key: "C",
+                explanation: "Pola passive present perfect continuous adalah: Subject + has/have + been + being + V3 ('has been being updated')."
+            },
+            {
+                id: 70,
+                topic: "PAST PERFECT PASSIVE",
+                level: "SULIT",
+                question: "Front-line officers ... by AI-based customer service by the time 4.0 era started.",
+                options: [
+                    "A. has been replacing",
+                    "B. had been replaces",
+                    "C. had being replaced",
+                    "D. had been replaced"
+                ],
+                key: "D",
+                explanation: "Frasa 'by the time' dalam konteks masa lampau memerlukan bentuk past perfect pasif: S + had + been + V3 ('had been replaced')."
+            },
+            {
+                id: 71,
+                topic: "SIMPLE PAST PASSIVE INTERROGATIVE",
+                level: "SULIT",
+                question: "... while we were having a meeting?",
+                options: [
+                    "A. Was the alarm being activating?",
+                    "B. Does the alarm activate?",
+                    "C. Was the alarm activated?",
+                    "D. Did the alarm activated?"
+                ],
+                key: "C",
+                explanation: "Struktur kalimat tanya pasif bentuk lampau untuk kejadian yang terjadi di sela kegiatan lain: Was + Subject + V3 ('Was the alarm activated?')."
+            },
+            {
+                id: 72,
+                passage: "jackie",
+                topic: "NOUN CLOZE",
+                level: "SULIT",
+                question: "Choose the best word for blank (72) in the passage above:",
+                options: ["A. injury", "B. hurt", "C. ache", "D. stitch"],
+                key: "C",
+                explanation: "Kata benda yang umum dan tepat untuk rasa nyeri berkepanjangan pada perut di bidang medis adalah 'ache' (misal: stomachache / mild ache)."
+            },
+            {
+                id: 73,
+                passage: "jackie",
+                topic: "VERB CLOZE",
+                level: "SULIT",
+                question: "Choose the best word for blank (73) in the passage above:",
+                options: ["A. shifted", "B. changed", "C. transformed", "D. moved"],
+                key: "A",
+                explanation: "Istilah perpindahan titik nyeri secara bertahap dalam istilah gejala medis adalah 'shifted'."
+            },
+            {
+                id: 74,
+                passage: "jackie",
+                topic: "ADJECTIVE CLOZE",
+                level: "SULIT",
+                question: "Choose the best word for blank (74) in the passage above:",
+                options: ["A. suspenseful", "B. traumatized", "C. critical", "D. nerve-wrecking"],
+                key: "C",
+                explanation: "Kata sifat yang tepat untuk menerangkan komplikasi penyakit yang parah dan gawat adalah 'critical complications'."
+            },
+            {
+                id: 75,
+                topic: "PARALLEL STRUCTURE",
+                level: "SULIT",
+                question: "The new candidate is assessed as a ..., passionate individual, and mindful employee.",
+                options: [
+                    "A. resilience figure",
+                    "B. resilient figure",
+                    "C. resilience figurative",
+                    "D. resilient figurative"
+                ],
+                key: "B",
+                explanation: "Pola paralel menuntut susunan Adjective + Noun orang ('passionate individual', 'mindful employee'). Maka 'resilient figure' (adjective + noun) adalah pilihan tepat."
+            }
+        ];
+
+        // State Application
+        let currentQuestionIndex = 0;
+        let userAnswers = {};      // { [questionId]: 'A' | 'B' | 'C' | 'D' }
+        let flaggedQuestions = {}; // { [questionId]: true | false }
+        let timerSeconds = 90 * 60; // default 90 minutes
+        let timerInterval = null;
+        let isExamFinished = false;
+
+        // Participant Information
+        let participantProfile = {
+            name: "",
+            school: "",
+            token: ""
+        };
+
+        const OFFICIAL_TOKEN = "Spenduro00";
+
+        // Toggle Token Visibility
+        function toggleTokenVisibility() {
+            const tokenInput = document.getElementById('examToken');
+            const icon = document.getElementById('tokenEyeIcon');
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';
+                icon.className = 'ph-bold ph-eye-slash';
+            } else {
+                tokenInput.type = 'password';
+                icon.className = 'ph-bold ph-eye';
+            }
+        }
+
+        // Initialize on window load
+        window.onload = function() {
+            // Keep portal displayed on fresh load
+            document.getElementById('loginPortal').classList.remove('hidden');
+        };
+
+        // Handle Portal Login & Validation
+        function handleStartExam(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('loginAlert');
+            const alertText = document.getElementById('loginAlertText');
+            
+            const name = document.getElementById('participantName').value.trim();
+            const school = document.getElementById('participantSchool').value.trim();
+            const token = document.getElementById('examToken').value.trim();
+            const durationMins = parseInt(document.getElementById('examDurationSelect').value) || 90;
+
+            if (!name || !school) {
+                alertText.innerText = "Harap lengkapi nama peserta dan asal sekolah Anda!";
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            // Case-sensitive token check - Secure generic message
+            if (token !== OFFICIAL_TOKEN) {
+                alertText.innerText = "Token ujian tidak valid atau salah! Silakan hubungi proktor / pengawas ujian Anda.";
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            // Save profile
+            participantProfile.name = name;
+            participantProfile.school = school;
+            participantProfile.token = token;
+
+            // Update Navbar Info
+            document.getElementById('navParticipantName').innerText = name;
+            document.getElementById('navParticipantSchool').innerText = school;
+
+            // Set Duration
+            timerSeconds = durationMins * 60;
+
+            // Hide Portal & Launch Exam
+            alertBox.classList.add('hidden');
+            document.getElementById('loginPortal').classList.add('hidden');
+
+            // Attempt Fullscreen on start for true CBT feel
+            try {
+                const docEl = document.documentElement;
+                const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+                if (requestFullScreen) {
+                    requestFullScreen.call(docEl).catch(() => {});
+                }
+            } catch(e) {}
+
+            // Setup questions & start clock
+            initQuestionGrid();
+            renderQuestion(0);
+            startTimer();
+            updateStatsSummary();
+        }
+
+        function promptLogoutPortal() {
+            if (confirm("Apakah Anda yakin ingin keluar ke menu beranda portal? Jawaban saat ini akan direset.")) {
+                logoutToPortal();
+            }
+        }
+
+        function logoutToPortal() {
+            clearInterval(timerInterval);
+            isExamFinished = false;
+            userAnswers = {};
+            flaggedQuestions = {};
+            currentQuestionIndex = 0;
+            closeResultModal();
+            closeConfirmModal();
+
+            document.getElementById('loginPortal').classList.remove('hidden');
+            document.getElementById('examToken').value = '';
+            document.getElementById('loginAlert').classList.add('hidden');
+        }
+
+        // Fullscreen Handling
+        function toggleFullScreen() {
+            const doc = window.document;
+            const docEl = doc.documentElement;
+
+            const requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+            const cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+            if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+                if(requestFullScreen) {
+                    requestFullScreen.call(docEl);
+                    document.getElementById('fsIcon').className = 'ph-bold ph-arrows-in';
+                }
+            } else {
+                if(cancelFullScreen) {
+                    cancelFullScreen.call(doc);
+                    document.getElementById('fsIcon').className = 'ph-bold ph-arrows-out';
+                }
+            }
+        }
+
+        // Timer Implementation
+        function startTimer() {
+            const display = document.getElementById('timerDisplay');
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    finalizeExam();
+                    return;
+                }
+                timerSeconds--;
+                const minutes = Math.floor(timerSeconds / 60);
+                const seconds = timerSeconds % 60;
+                display.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if(timerSeconds <= 300) { // Under 5 mins warning
+                    display.classList.add('text-rose-400');
+                }
+            }, 1000);
+        }
+
+        // Render Sidebar Navigation Grid
+        function initQuestionGrid() {
+            const grid = document.getElementById('questionGridContainer');
+            grid.innerHTML = '';
+            for (let i = 0; i < questionsData.length; i++) {
+                const q = questionsData[i];
+                const btn = document.createElement('button');
+                btn.id = `grid-btn-${i}`;
+                btn.innerText = q.id;
+                btn.className = `h-10 text-xs font-bold rounded-lg border flex items-center justify-center transition-all ${getButtonClass(i)}`;
+                btn.onclick = () => {
+                    renderQuestion(i);
+                    // Close mobile sidebar if open
+                    document.getElementById('sidebarGrid').classList.add('translate-x-full');
+                };
+                grid.appendChild(btn);
+            }
+        }
+
+        function getButtonClass(index) {
+            const qId = questionsData[index].id;
+            const isCurrent = index === currentQuestionIndex;
+            const isAnswered = userAnswers[qId] !== undefined;
+            const isFlagged = flaggedQuestions[qId] === true;
+
+            let base = "border-slate-300 text-slate-700 bg-slate-100 hover:bg-slate-200";
+
+            if (isAnswered && isFlagged) {
+                base = "bg-amber-400 border-amber-500 text-amber-950 font-black";
+            } else if (isAnswered) {
+                base = "bg-emerald-500 border-emerald-600 text-white font-bold";
+            } else if (isFlagged) {
+                base = "bg-amber-100 border-amber-400 text-amber-800 font-bold";
+            }
+
+            if (isCurrent) {
+                base += " ring-2 ring-brand-600 ring-offset-2 scale-105 z-10 shadow-md";
+            }
+            return base;
+        }
+
+        function refreshGridStyles() {
+            for (let i = 0; i < questionsData.length; i++) {
+                const btn = document.getElementById(`grid-btn-${i}`);
+                if (btn) {
+                    btn.className = `h-10 text-xs font-bold rounded-lg border flex items-center justify-center transition-all ${getButtonClass(i)}`;
+                }
+            }
+            updateStatsSummary();
+        }
+
+        // Render Current Question
+        function renderQuestion(index) {
+            if (index < 0 || index >= questionsData.length) return;
+            currentQuestionIndex = index;
+            const q = questionsData[index];
+
+            // Badges
+            document.getElementById('questionNumberBadge').innerText = `SOAL NO. ${q.id}`;
+            document.getElementById('questionCategory').innerText = q.topic;
+            
+            const diffEl = document.getElementById('questionDifficulty');
+            diffEl.innerText = q.level;
+            if(q.level === 'MUDAH') {
+                diffEl.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800';
+            } else if(q.level === 'SEDANG') {
+                diffEl.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-800';
+            } else {
+                diffEl.className = 'text-xs font-bold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800';
+            }
+
+            // Flag checkbox
+            document.getElementById('flagCheckbox').checked = !!flaggedQuestions[q.id];
+
+            // Passage container handling
+            const passageBox = document.getElementById('passageContainer');
+            if (q.passage && passages[q.passage]) {
+                const p = passages[q.passage];
+                document.getElementById('passageTitle').innerText = p.title;
+                document.getElementById('passageText').innerText = p.text;
+                passageBox.classList.remove('hidden');
+            } else {
+                passageBox.classList.add('hidden');
+            }
+
+            // Image handling (Q32)
+            const imgBox = document.getElementById('imageContainer');
+            if (q.hasImage) {
+                document.getElementById('questionImage').src = q.imageUrl;
+                imgBox.classList.remove('hidden');
+            } else {
+                imgBox.classList.add('hidden');
+            }
+
+            // Question Text
+            document.getElementById('questionText').innerHTML = q.question.replace(/\n/g, '<br>');
+
+            // Render Options
+            const optContainer = document.getElementById('optionsContainer');
+            optContainer.innerHTML = '';
+            
+            const currentSelected = userAnswers[q.id];
+
+            q.options.forEach((optStr) => {
+                const optKey = optStr.charAt(0); // 'A', 'B', 'C', 'D'
+                const optText = optStr.substring(3);
+
+                const optButton = document.createElement('div');
+                const isSelected = currentSelected === optKey;
+
+                optButton.className = `p-4 rounded-xl border-2 cursor-pointer transition-all flex items-start gap-3.5 ${
+                    isSelected 
+                        ? 'border-brand-600 bg-brand-50/70 shadow-sm text-brand-950 ring-1 ring-brand-500' 
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                }`;
+
+                optButton.onclick = () => selectOption(q.id, optKey);
+
+                optButton.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0 transition-colors ${
+                        isSelected 
+                            ? 'bg-brand-600 text-white' 
+                            : 'bg-slate-100 text-slate-700 border border-slate-300'
+                    }">
+                        ${optKey}
+                    </div>
+                    <div class="text-sm md:text-base font-normal pt-1 leading-snug">
+                        ${optText}
+                    </div>
+                `;
+
+                optContainer.appendChild(optButton);
+            });
+
+            // Update Navigation Buttons state
+            document.getElementById('prevBtn').disabled = (index === 0);
+            document.getElementById('prevBtn').classList.toggle('opacity-50', index === 0);
+
+            const isLast = (index === questionsData.length - 1);
+            document.getElementById('nextBtn').classList.toggle('hidden', isLast);
+            document.getElementById('submitExamBtn').classList.toggle('hidden', !isLast);
+
+            // Update mobile header indicator
+            document.getElementById('mobileGridStatus').innerText = `No. ${q.id} / ${questionsData.length}`;
+
+            refreshGridStyles();
+        }
+
+        function selectOption(questionId, optionKey) {
+            if (isExamFinished) return;
+            userAnswers[questionId] = optionKey;
+            renderQuestion(currentQuestionIndex);
+        }
+
+        function toggleFlag() {
+            const qId = questionsData[currentQuestionIndex].id;
+            flaggedQuestions[qId] = !flaggedQuestions[qId];
+            refreshGridStyles();
+        }
+
+        function navigateQuestion(offset) {
+            const newIndex = currentQuestionIndex + offset;
+            if (newIndex >= 0 && newIndex < questionsData.length) {
+                renderQuestion(newIndex);
+            }
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebarGrid');
+            sidebar.classList.toggle('translate-x-full');
+        }
+
+        function updateStatsSummary() {
+            let answered = 0;
+            let flagged = 0;
+
+            questionsData.forEach(q => {
+                if (userAnswers[q.id] !== undefined) answered++;
+                if (flaggedQuestions[q.id]) flagged++;
+            });
+
+            const unanswered = questionsData.length - answered;
+            const progress = Math.round((answered / questionsData.length) * 100);
+
+            document.getElementById('countAnswered').innerText = answered;
+            document.getElementById('countFlagged').innerText = flagged;
+            document.getElementById('countUnanswered').innerText = unanswered;
+
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').innerText = `${progress}% (${answered}/${questionsData.length})`;
+        }
+
+        // Exam Completion & Review Handlers
+        function promptFinishExam() {
+            let answered = 0;
+            let flagged = 0;
+            questionsData.forEach(q => {
+                if (userAnswers[q.id] !== undefined) answered++;
+                if (flaggedQuestions[q.id]) flagged++;
+            });
+
+            document.getElementById('confirmAnsweredCount').innerText = answered;
+            document.getElementById('confirmFlaggedCount').innerText = flagged;
+            document.getElementById('confirmEmptyCount').innerText = questionsData.length - answered;
+            document.getElementById('confirmModalSummary').innerText = `Anda telah menjawab ${answered} dari ${questionsData.length} butir soal.`;
+
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+        }
+
+        function finalizeExam() {
+            closeConfirmModal();
+            clearInterval(timerInterval);
+            isExamFinished = true;
+
+            let correctCount = 0;
+            let wrongCount = 0;
+            let emptyCount = 0;
+
+            questionsData.forEach(q => {
+                const userChoice = userAnswers[q.id];
+                if (!userChoice) {
+                    emptyCount++;
+                } else if (userChoice === q.key) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            // Calculate scaled score out of 100
+            const totalScore = Math.round((correctCount / questionsData.length) * 100);
+            const accuracy = answeredCount() > 0 ? Math.round((correctCount / answeredCount()) * 100) : 0;
+
+            // Render stats into modal
+            document.getElementById('scoreDisplay').innerText = totalScore;
+            document.getElementById('statCorrect').innerText = correctCount;
+            document.getElementById('statWrong').innerText = wrongCount;
+            document.getElementById('statEmpty').innerText = emptyCount;
+            document.getElementById('statAccuracy').innerText = `${accuracy}%`;
+
+            // Display Participant info in review header
+            document.getElementById('resultParticipantDetails').innerText = `Peserta: ${participantProfile.name} | Asal: ${participantProfile.school}`;
+            document.getElementById('resultBadgeParticipant').innerText = participantProfile.school;
+
+            renderReviewList('all');
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function answeredCount() {
+            return Object.keys(userAnswers).length;
+        }
+
+        let currentReviewFilter = 'all';
+
+        function filterReview(type) {
+            currentReviewFilter = type;
+            document.querySelectorAll('.review-filter-btn').forEach(b => {
+                b.classList.remove('bg-slate-200', 'font-bold', 'border', 'border-slate-300');
+            });
+
+            if (type === 'all') document.getElementById('filterAll').classList.add('bg-slate-200', 'font-bold');
+            if (type === 'wrong') document.getElementById('filterWrong').classList.add('bg-slate-200', 'font-bold');
+            if (type === 'correct') document.getElementById('filterCorrect').classList.add('bg-slate-200', 'font-bold');
+
+            renderReviewList(type);
+        }
+
+        function renderReviewList(filter) {
+            const container = document.getElementById('reviewItemsContainer');
+            container.innerHTML = '';
+
+            questionsData.forEach(q => {
+                const userChoice = userAnswers[q.id];
+                const isCorrect = userChoice === q.key;
+                const isAnswered = userChoice !== undefined;
+
+                if (filter === 'correct' && !isCorrect) return;
+                if (filter === 'wrong' && (isCorrect || !isAnswered)) return;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border text-sm space-y-3 ${
+                    isCorrect 
+                        ? 'border-emerald-200 bg-emerald-50/30' 
+                        : (isAnswered ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-slate-50')
+                }`;
+
+                let statusBadge = isCorrect 
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded font-bold flex items-center gap-1"><i class="ph-bold ph-check"></i> BENAR</span>`
+                    : (isAnswered 
+                        ? `<span class="bg-rose-100 text-rose-800 text-xs px-2.5 py-1 rounded font-bold flex items-center gap-1"><i class="ph-bold ph-x"></i> SALAH</span>`
+                        : `<span class="bg-slate-200 text-slate-700 text-xs px-2.5 py-1 rounded font-bold">KOSONG</span>`);
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-slate-800">No. ${q.id}</span>
+                            <span class="text-xs bg-slate-200 px-2 py-0.5 rounded text-slate-600 font-semibold">${q.topic}</span>
+                        </div>
+                        ${statusBadge}
+                    </div>
+
+                    <div class="text-slate-800 font-medium whitespace-pre-line leading-relaxed">
+                        ${q.question}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div class="p-2.5 rounded-lg border ${isCorrect ? 'bg-emerald-100 border-emerald-300 text-emerald-900 font-semibold' : 'bg-slate-100 border-slate-200'}">
+                            <strong>Jawaban Anda:</strong> ${userChoice ? userChoice + '. ' + getOptionText(q, userChoice) : '<em class="text-slate-400">Tidak menjawab</em>'}
+                        </div>
+                        <div class="p-2.5 rounded-lg border bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold">
+                            <strong>Kunci Jawaban:</strong> ${q.key}. ${getOptionText(q, q.key)}
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 text-xs text-slate-700 space-y-1">
+                        <div class="font-bold text-brand-900 flex items-center gap-1">
+                            <i class="ph-bold ph-lightbulb"></i> Pembahasan:
+                        </div>
+                        <p class="leading-relaxed text-slate-600">${q.explanation}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            if (container.children.length === 0) {
+                container.innerHTML = `<p class="text-center py-8 text-slate-400 text-xs italic">Tidak ada butir soal dalam kategori filter ini.</p>`;
+            }
+        }
+
+        function getOptionText(questionObj, key) {
+            const found = questionObj.options.find(opt => opt.startsWith(key + '.'));
+            return found ? found.substring(3) : key;
+        }
+
+        function closeResultModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+
+        function restartExam() {
+            userAnswers = {};
+            flaggedQuestions = {};
+            currentQuestionIndex = 0;
+            timerSeconds = 90 * 60;
+            isExamFinished = false;
+            closeResultModal();
+            renderQuestion(0);
+            startTimer();
+            updateStatsSummary();
+        }
+    </script>
+</body>
+</html>
